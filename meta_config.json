@@ -1,0 +1,11 @@
+{
+  "app_id": "1190373659821616",
+  "app_name": "SuperiorPDR-Dashboard",
+  "ig_user_id": "17841405319139027",
+  "ig_username": "superiorpdrtaiwan",
+  "fb_page_id": "605178939564609",
+  "fb_page_name": "Superior卓越凹痕修復車體維美中心",
+  "token_note": "User Access Token - 約60天有效，到期需重新產生",
+  "token_generated": "2026-05-26",
+  "permissions": ["instagram_basic", "instagram_manage_insights", "pages_read_engagement", "pages_show_list"]
+}

@@ -1,0 +1,7 @@
+timetree_auth.json
+timetree_api_responses.json
+timetree_raw.txt
+timetree_raw.json
+timetree_screenshot.png
+__pycache__/
+*.pyc
