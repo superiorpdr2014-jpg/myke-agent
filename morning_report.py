@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from playwright.sync_api import sync_playwright
 
 # ── Config ───────────────────────────────────────────────────
-TOKEN  = "EAAQ6o3ckxjABRs5zHPoCeEMWNrqSVKtmZB4n3a1ncNbrUmcot4qvzkQ98pWI6xt2ZBPIFmLhouUDxWkEcAZANNrgRudYmiFDBsgnTCZB4tIKLVsaWmZAGSpQ7GnNpw3Vdyo3guk0ZBrwl3JSrfCUrXnOTcptUpQRdRbqvGma3XGxtzQW48M9ZARM1yJuMZAfZCNT8lMbxKD1uGyEhSxSOx88MK4nL9ZBIc450kgssUloZB62VDIqehHpsYvWek3ZB0jxZASNYntA3CnyuEWX7KUyjXrtSGfMMRwZDZD"
+TOKEN  = "EAAQ6o3ckxjABRhqfDueupO45NL2Fik9t7f1PCFh7oGBVeMZAlnTiigFfMqW4o71uYVS9ZB6sKKXugmcfkFgGwNstClzaDMNsZAKi7FGA5lp1jQdZBsmonq9bsISHr410N68uJ8YbmkgbIZC58D1h4KiQJWF1asUmWvVjzikSjIgTckp1ob1Or1DtzgN9pQnJcrZAoSGnsNsZAlz9JF3SB1It1pO2AKtzm5ZB4Jfe39ZC8nsXzCrTofG9zVEU1nTdFw5etezaVc8Kgfnn8JqJ0Ti5SDxJxbaEdu6sBKS0ZD"
 IG_ID  = "17841405319139027"
 BASE   = "https://graph.facebook.com/v25.0"
 

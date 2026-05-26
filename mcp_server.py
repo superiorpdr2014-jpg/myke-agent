@@ -2,9 +2,7 @@
 Myke Agent MCP Server
 讓 Claude 桌面 app 直接執行晨報、IG 數據、行事曆查詢
 """
-import sys, io, os, json, time, sqlite3, shutil
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+import sys, os, json, time, sqlite3, shutil
 
 # Ensure working directory is Myke_Agent
 AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +16,7 @@ from fastmcp import FastMCP
 mcp = FastMCP("Myke Agent - SUPERIOR PDR")
 
 # ── Config ────────────────────────────────────────────────────
-TOKEN  = "EAAQ6o3ckxjABRs5zHPoCeEMWNrqSVKtmZB4n3a1ncNbrUmcot4qvzkQ98pWI6xt2ZBPIFmLhouUDxWkEcAZANNrgRudYmiFDBsgnTCZB4tIKLVsaWmZAGSpQ7GnNpw3Vdyo3guk0ZBrwl3JSrfCUrXnOTcptUpQRdRbqvGma3XGxtzQW48M9ZARM1yJuMZAfZCNT8lMbxKD1uGyEhSxSOx88MK4nL9ZBIc450kgssUloZB62VDIqehHpsYvWek3ZB0jxZASNYntA3CnyuEWX7KUyjXrtSGfMMRwZDZD"
+TOKEN  = "EAAQ6o3ckxjABRhqfDueupO45NL2Fik9t7f1PCFh7oGBVeMZAlnTiigFfMqW4o71uYVS9ZB6sKKXugmcfkFgGwNstClzaDMNsZAKi7FGA5lp1jQdZBsmonq9bsISHr410N68uJ8YbmkgbIZC58D1h4KiQJWF1asUmWvVjzikSjIgTckp1ob1Or1DtzgN9pQnJcrZAoSGnsNsZAlz9JF3SB1It1pO2AKtzm5ZB4Jfe39ZC8nsXzCrTofG9zVEU1nTdFw5etezaVc8Kgfnn8JqJ0Ti5SDxJxbaEdu6sBKS0ZD"
 IG_ID  = "17841405319139027"
 BASE   = "https://graph.facebook.com/v25.0"
 
