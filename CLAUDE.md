@@ -104,6 +104,11 @@
 - 不主動加入不必要的功能或重構
 - 執行破壞性操作前必須先詢問確認
 
+### 爬蟲規則
+- 爬取社群媒體（Instagram、Facebook、YouTube 等需要登入的平台）一律使用 **Playwright MCP**
+- 爬取一般網站內容一律使用 **Firecrawl MCP**
+- 禁止使用 WebFetch 爬取社群媒體，因為無法處理登入與動態渲染
+
 ### 安全設定
 - 危險指令黑名單已設定於 `~/.claude/settings.json`（rm -rf、sudo、git reset --hard 等 20 條）
 - 權限模式：**Accept Edits**
