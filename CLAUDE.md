@@ -112,3 +112,35 @@
 ### 安全設定
 - 危險指令黑名單已設定於 `~/.claude/settings.json`（rm -rf、sudo、git reset --hard 等 20 條）
 - 權限模式：**Accept Edits**
+
+---
+
+## 系統狀態（最後更新：2026-05-26）
+
+### MCP Server 上線狀態
+- `mcp_server.py` 已作為 MCP server 掛載至 Claude Desktop
+- 可直接從 Claude 對話呼叫，**不需開終端機**
+- 四個可用工具：
+  - `morning_report` — 每日晨報（行事曆 + IG）
+  - `ig_stats` — 即時 IG 數據
+  - `calendar_today` — 今日行事曆
+  - `calendar_week` — 本週行事曆
+
+### 終端機環境
+- **主要終端機**：wmux（內建瀏覽器面板）
+- wmux 無 session log 檔案，指令歷史存於 PowerShell PSReadLine：
+  `C:\Users\User\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt`
+
+### Instagram API
+- **IG ID**：`17841405319139027`（@superiorpdrtaiwan）
+- **粉絲數**：84,796（2026-05-26 確認）
+- **總貼文**：626
+- Token 存於 `mcp_server.py` 第 19 行
+- **Token 更新後需重啟 Claude Desktop** 才會生效（MCP server 啟動時載入）
+
+### TimeTree 行事曆
+- 行事曆 URL：`https://timetreeapp.com/calendars/TEjWVnDzaE17`
+- 透過 Playwright headless 抓取，Cookie 從 wmux 自動更新
+- Cookie 來源：`C:\Users\User\AppData\Roaming\wmux\Network\Cookies`
+- Auth 暫存：`timetree_auth.json`
+- 2026-05-26 確認正常讀取
