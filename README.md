@@ -55,6 +55,43 @@ The main change is that `findOrCreateVehicle` checks if the same brand + model a
 
 ---
 
+## Human Agent Quote Detection
+
+When a human agent takes over and types a price quote, the module automatically:
+1. Updates the customer's **服務進度** → `已報價`
+2. Saves the quote to the case's **網路區間報價** field
+
+### Usage
+
+Call `handleAgentQuote` **only on outgoing agent messages**, never on incoming customer messages.
+
+```js
+const crm = require('./echo_airtable_crm');
+
+// In your human-takeover message handler (agent-side only):
+const result = await crm.handleAgentQuote(agentMessage, customerId, caseId);
+if (result.detected) {
+  console.log(`Quote saved: ${result.quote}`); // e.g. "NT$1500-NT$2500"
+}
+```
+
+### Accepted quote formats
+
+| Input | Saved as |
+|-------|----------|
+| `1500-2500` | NT$1500-NT$2500 |
+| `$1500-$2500` | NT$1500-NT$2500 |
+| `1500~2500` | NT$1500-NT$2500 |
+| `$1500~$2500` | NT$1500-NT$2500 |
+| `$2500` | NT$2500 |
+
+### Rejected (will not trigger)
+
+- Bare numbers: `800`, `1000`, `2500` — avoids false positives from car model numbers or customer messages
+- Numbers typed by the customer — safe because this function is only called on agent-side messages
+
+---
+
 ## Files
 
 | File | Description |
