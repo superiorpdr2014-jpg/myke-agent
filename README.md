@@ -57,6 +57,17 @@ The main change is that `findOrCreateVehicle` checks if the same brand + model a
 
 ## Human Agent Quote Detection
 
+Hey Myke, I've added one more feature to the CRM module — automatic quote detection for when a human agent takes over.
+
+Check the README for the full breakdown:
+https://github.com/superiorpdr2014-jpg/myke-agent
+
+The short version: when a human agent sends a message containing a price quote, call `handleAgentQuote()` on that outgoing message. It'll parse the quote, update the customer's status to 已報價, and save the amount to the case record automatically.
+
+It's designed to only trigger on specific formats (ranges like `1500-2500` or a single amount with a $ sign like `$2500`) so bare numbers from customers or car model references won't accidentally fire it. Full format table is in the README.
+
+The function is already in `echo_airtable_crm.js` — just wire it into whichever part of ECHO handles outgoing agent messages. Let me know if anything needs adjusting.
+
 When a human agent takes over and types a price quote, the module automatically:
 1. Updates the customer's **服務進度** → `已報價`
 2. Saves the quote to the case's **網路區間報價** field
