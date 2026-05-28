@@ -15,9 +15,7 @@ AT_TABLES = {
 }
 AT_HEADERS = {"Authorization": f"Bearer {AT_TOKEN}"}
 
-TG_TOKEN = st.secrets["TG_TOKEN"]
-TG_API   = f"https://api.telegram.org/bot{TG_TOKEN}"
-TW       = timezone(timedelta(hours=8))
+TW = timezone(timedelta(hours=8))
 
 REFRESH_SEC = 30  # auto-refresh every 30 seconds
 
@@ -55,29 +53,6 @@ def fetch_airtable(table_name: str) -> pd.DataFrame:
         rows.append(row)
     return pd.DataFrame(rows)
 
-@st.cache_data(ttl=REFRESH_SEC)
-def fetch_telegram_messages(limit: int = 50) -> list:
-    r = requests.get(f"{TG_API}/getUpdates", params={"limit": limit, "allowed_updates": ["message"]})
-    data = r.json()
-    if not data.get("ok"):
-        return []
-    messages = []
-    for u in reversed(data.get("result", [])):
-        msg = u.get("message") or u.get("channel_post") or {}
-        if not msg:
-            continue
-        chat   = msg.get("chat", {})
-        sender = msg.get("from", {})
-        ts     = datetime.fromtimestamp(msg.get("date", 0), tz=TW)
-        messages.append({
-            "時間":   ts.strftime("%m/%d %H:%M"),
-            "群組":   chat.get("title") or chat.get("username") or "私訊",
-            "發話人": (sender.get("first_name") or "") + " " + (sender.get("last_name") or ""),
-            "訊息":   msg.get("text", "[非文字]")[:200],
-            "chat_id": chat.get("id", ""),
-        })
-    return messages
-
 # ── Header ────────────────────────────────────────────────────
 now = datetime.now(TW)
 col_title, col_time = st.columns([3, 1])
@@ -87,28 +62,6 @@ with col_time:
     st.markdown(f"<div style='text-align:right;padding-top:12px;color:#888'>"
                 f"更新：{now.strftime('%H:%M:%S')}　每 {REFRESH_SEC}s 自動刷新</div>",
                 unsafe_allow_html=True)
-
-st.divider()
-
-# ── Telegram ──────────────────────────────────────────────────
-st.markdown("### 💬 Telegram · ECHO Bot 即時訊息")
-
-messages = fetch_telegram_messages(50)
-if messages:
-    df_tg = pd.DataFrame(messages).drop(columns=["chat_id"])
-    st.dataframe(
-        df_tg,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "時間":   st.column_config.TextColumn("時間",   width=90),
-            "群組":   st.column_config.TextColumn("群組",   width=140),
-            "發話人": st.column_config.TextColumn("發話人", width=110),
-            "訊息":   st.column_config.TextColumn("訊息"),
-        }
-    )
-else:
-    st.info("目前無訊息（Bot 尚未收到任何對話）")
 
 st.divider()
 
