@@ -117,25 +117,71 @@ st.markdown("### 📋 ECHO CRM · Airtable 資料表")
 
 tab1, tab2, tab3 = st.tabs(["👤 客戶資料", "🚗 車輛資料", "📁 案件記錄"])
 
+STATUS_COLORS = {
+    "已派單": "#3b82f6",
+    "已預約": "#f59e0b",
+    "諮詢中": "#8b5cf6",
+    "修復中": "#f97316",
+    "已完成": "#22c55e",
+    "已取消": "#ef4444",
+    "None":   "#9ca3af",
+}
+
+def clean_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Convert linked record IDs to counts, format timestamps."""
+    for col in df.columns:
+        if col == "_id":
+            continue
+        # Linked records → show count
+        if df[col].apply(lambda v: isinstance(v, list)).any():
+            df[col] = df[col].apply(
+                lambda v: f"{len(v)} 筆" if isinstance(v, list) and v else ("—" if isinstance(v, list) else v)
+            )
+        # ISO timestamps → Taiwan time readable
+        if df[col].dtype == object:
+            sample = df[col].dropna().head(5).astype(str)
+            if sample.str.match(r"\d{4}-\d{2}-\d{2}T").any():
+                def fmt_ts(v):
+                    try:
+                        dt = pd.to_datetime(v, utc=True).tz_convert("Asia/Taipei")
+                        return dt.strftime("%Y/%m/%d %H:%M")
+                    except Exception:
+                        return v
+                df[col] = df[col].apply(lambda v: fmt_ts(v) if pd.notna(v) else "—")
+    return df
+
+def style_status(val):
+    color = STATUS_COLORS.get(str(val), STATUS_COLORS["None"])
+    return f"background-color:{color}22; color:{color}; font-weight:600; border-radius:4px; padding:2px 6px;"
+
 # ── 客戶資料 ─────────────────────────────────────────────────
 with tab1:
     df = fetch_airtable("客戶資料")
     if df.empty:
         st.info("客戶資料表為空")
     else:
-        # Drop internal link columns
-        display_cols = [c for c in df.columns if c != "_id" and not isinstance(df[c].iloc[0], list)]
+        df = clean_df(df)
+
+        # Sort by 最後更新時間 desc
+        if "最後更新時間" in df.columns:
+            df = df.sort_values("最後更新時間", ascending=False)
+
+        display_cols = [c for c in df.columns if c != "_id"]
         st.metric("客戶總數", len(df))
         search = st.text_input("搜尋客戶（姓名 / 電話 / LINE）", key="search_customer")
         if search:
             mask = df.apply(lambda row: row.astype(str).str.contains(search, case=False, na=False).any(), axis=1)
             df = df[mask]
             st.caption(f"找到 {len(df)} 筆")
-        st.dataframe(
-            df[display_cols] if display_cols else df,
-            use_container_width=True,
-            hide_index=True,
-        )
+
+        styled = df[display_cols]
+        if "服務進度" in styled.columns:
+            st.dataframe(
+                styled.style.applymap(style_status, subset=["服務進度"]),
+                use_container_width=True, hide_index=True,
+            )
+        else:
+            st.dataframe(styled, use_container_width=True, hide_index=True)
 
 # ── 車輛資料 ─────────────────────────────────────────────────
 with tab2:
@@ -143,18 +189,15 @@ with tab2:
     if df.empty:
         st.info("車輛資料表為空")
     else:
-        display_cols = [c for c in df.columns if c != "_id" and not isinstance(df[c].iloc[0], list)]
+        df = clean_df(df)
+        display_cols = [c for c in df.columns if c != "_id"]
         st.metric("車輛總數", len(df))
         search = st.text_input("搜尋車輛（車牌 / 廠牌 / 型號）", key="search_vehicle")
         if search:
             mask = df.apply(lambda row: row.astype(str).str.contains(search, case=False, na=False).any(), axis=1)
             df = df[mask]
             st.caption(f"找到 {len(df)} 筆")
-        st.dataframe(
-            df[display_cols] if display_cols else df,
-            use_container_width=True,
-            hide_index=True,
-        )
+        st.dataframe(df[display_cols], use_container_width=True, hide_index=True)
 
 # ── 案件記錄 ─────────────────────────────────────────────────
 with tab3:
@@ -162,7 +205,10 @@ with tab3:
     if df.empty:
         st.info("案件記錄表為空")
     else:
-        display_cols = [c for c in df.columns if c != "_id" and not isinstance(df[c].iloc[0], list)]
+        df = clean_df(df)
+        if "派單時間" in df.columns:
+            df = df.sort_values("派單時間", ascending=False)
+        display_cols = [c for c in df.columns if c != "_id"]
 
         col1, col2, col3 = st.columns(3)
         col1.metric("案件總數", len(df))
@@ -170,7 +216,6 @@ with tab3:
             status_counts = df["案件狀態"].value_counts()
             col2.metric("進行中", int(status_counts.get("修復中", 0)))
             col3.metric("已完成", int(status_counts.get("已完成", 0)))
-
             status_filter = st.selectbox(
                 "篩選狀態",
                 ["全部"] + list(df["案件狀態"].dropna().unique()),
@@ -185,11 +230,14 @@ with tab3:
             df = df[mask]
             st.caption(f"找到 {len(df)} 筆")
 
-        st.dataframe(
-            df[display_cols] if display_cols else df,
-            use_container_width=True,
-            hide_index=True,
-        )
+        styled = df[display_cols]
+        if "案件狀態" in styled.columns:
+            st.dataframe(
+                styled.style.applymap(style_status, subset=["案件狀態"]),
+                use_container_width=True, hide_index=True,
+            )
+        else:
+            st.dataframe(styled, use_container_width=True, hide_index=True)
 
 # ── Footer ────────────────────────────────────────────────────
 st.markdown(
