@@ -463,6 +463,37 @@ def crm_add_customer(name: str, phone: str = "", line_name: str = "", branch: st
 
 
 @mcp.tool()
+def crm_set_quote(customer_id: str, case_id: str, price_text: str) -> str:
+    """
+    真人報價後手動觸發：更新客戶服務進度為「已報價」，並填入案件網路區間報價。
+    customer_id: 客戶 Airtable record ID
+    case_id:     案件 Airtable record ID
+    price_text:  報價文字，支援格式：
+                   1500-2500 / $1500-$2500 / 1500~2500 / $1500~$2500 / $2500
+    """
+    import re
+    range_re  = re.compile(r'(?:NT\$|\$)?(\d{3,6})\s*[-~]\s*(?:NT\$|\$)?(\d{3,6})')
+    single_re = re.compile(r'(?:NT\$|\$)(\d{3,6})')
+
+    m = range_re.search(price_text)
+    if m:
+        quote = f"NT${m.group(1)}-NT${m.group(2)}"
+    else:
+        m = single_re.search(price_text)
+        if m:
+            quote = f"NT${m.group(1)}"
+        else:
+            return f"無法辨識報價格式：「{price_text}」\n支援格式：1500-2500 / $1500-$2500 / 1500~2500 / $2500"
+
+    r1 = _at_patch("客戶", customer_id, {"服務進度": "已報價"})
+    r2 = _at_patch("案件", case_id,    {"網路區間報價": quote})
+
+    if r1.get("id") and r2.get("id"):
+        return f"報價已記錄：{quote}\n客戶服務進度 → 已報價"
+    return f"部分更新失敗：客戶={r1}  案件={r2}"
+
+
+@mcp.tool()
 def crm_find_or_create_vehicle(customer_id: str, brand: str, model: str,
                                 year: int = 0, plate: str = "") -> str:
     """

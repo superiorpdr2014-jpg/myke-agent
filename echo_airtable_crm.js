@@ -164,10 +164,63 @@ async function updateCaseStatus(caseId, status, { quote = null, damage = null } 
   return atPatch('case', caseId, fields);
 }
 
+// ── Quote detection & save ────────────────────────────────────
+/**
+ * Extracts a price quote from agent-typed text.
+ * Accepted formats (agent side only — never call this on customer messages):
+ *   Range : 1500-2500  $1500-$2500  1500~2500  $1500~$2500  NT$1500-NT$2500
+ *   Single: $2500  NT$2500   ← must have currency symbol to avoid false positives
+ * Rejected: bare numbers like 800, 1000, 2022 (car model/year noise)
+ *
+ * @param {string} text
+ * @returns {string|null}  normalised quote string, e.g. "NT$1500-NT$2500", or null
+ */
+function extractQuote(text) {
+  // Range pattern: optional NT$|$ + 3-6 digits + [-~] + optional NT$|$ + 3-6 digits
+  const rangeRe = /(?:NT\$|\$)?(\d{3,6})\s*[-~]\s*(?:NT\$|\$)?(\d{3,6})/;
+  // Single pattern: must be preceded by NT$ or $ to avoid bare-number false positives
+  const singleRe = /(?:NT\$|\$)(\d{3,6})/;
+
+  const rangeMatch = text.match(rangeRe);
+  if (rangeMatch) {
+    return `NT$${rangeMatch[1]}-NT$${rangeMatch[2]}`;
+  }
+  const singleMatch = text.match(singleRe);
+  if (singleMatch) {
+    return `NT$${singleMatch[1]}`;
+  }
+  return null;
+}
+
+/**
+ * Call this when a human agent sends a message (NOT on customer messages).
+ * If the message contains a valid quote, updates:
+ *   - Customer 服務進度 → 已報價
+ *   - Case 網路區間報價 → extracted quote
+ *
+ * @param {string} agentText   - the message the human agent typed
+ * @param {string} customerId  - Airtable customer record ID
+ * @param {string} caseId      - Airtable case record ID
+ * @returns {{ detected: boolean, quote: string|null }}
+ */
+async function handleAgentQuote(agentText, customerId, caseId) {
+  const quote = extractQuote(agentText);
+  if (!quote) return { detected: false, quote: null };
+
+  await Promise.all([
+    updateCustomerStatus(customerId, '已報價'),
+    atPatch('case', caseId, { '網路區間報價': quote }),
+  ]);
+
+  return { detected: true, quote };
+}
+
 module.exports = {
   findOrCreateCustomer,
   findOrCreateVehicle,
   createCase,
   updateCustomerStatus,
   updateCaseStatus,
+  extractQuote,
+  handleAgentQuote,
 };
