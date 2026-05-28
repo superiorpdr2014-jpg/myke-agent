@@ -166,7 +166,12 @@ with tab1:
         if "最後更新時間" in df.columns:
             df = df.sort_values("最後更新時間", ascending=False)
 
-        display_cols = [c for c in df.columns if c != "_id"]
+        all_cols = [c for c in df.columns if c != "_id"]
+        # Move 客戶LINE名稱 to position 1 (second column)
+        if "客戶LINE名稱" in all_cols:
+            all_cols.remove("客戶LINE名稱")
+            all_cols.insert(1, "客戶LINE名稱")
+        display_cols = all_cols
         st.metric("客戶總數", len(df))
         search = st.text_input("搜尋客戶（姓名 / 電話 / LINE）", key="search_customer")
         if search:
