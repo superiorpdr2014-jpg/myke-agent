@@ -2,7 +2,7 @@
 Myke Agent MCP Server
 讓 Claude 桌面 app 直接執行晨報、IG 數據、行事曆查詢、Telegram、Airtable CRM
 """
-import sys, os, json, time, sqlite3, shutil
+import sys, os, json, time, sqlite3, shutil, tomllib, pathlib
 
 # Ensure working directory is Myke_Agent
 AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -15,8 +15,12 @@ from fastmcp import FastMCP
 
 mcp = FastMCP("Myke Agent - SUPERIOR PDR")
 
+# ── Secrets（從 .streamlit/secrets.toml 讀取）────────────────
+_secrets_path = pathlib.Path(AGENT_DIR) / ".streamlit" / "secrets.toml"
+_secrets = tomllib.loads(_secrets_path.read_text(encoding="utf-8"))
+
 # ── Config ────────────────────────────────────────────────────
-TOKEN  = "EAAQ6o3ckxjABRhqfDueupO45NL2Fik9t7f1PCFh7oGBVeMZAlnTiigFfMqW4o71uYVS9ZB6sKKXugmcfkFgGwNstClzaDMNsZAKi7FGA5lp1jQdZBsmonq9bsISHr410N68uJ8YbmkgbIZC58D1h4KiQJWF1asUmWvVjzikSjIgTckp1ob1Or1DtzgN9pQnJcrZAoSGnsNsZAlz9JF3SB1It1pO2AKtzm5ZB4Jfe39ZC8nsXzCrTofG9zVEU1nTdFw5etezaVc8Kgfnn8JqJ0Ti5SDxJxbaEdu6sBKS0ZD"
+TOKEN  = _secrets.get("META_TOKEN", "")
 IG_ID  = "17841405319139027"
 BASE   = "https://graph.facebook.com/v25.0"
 
@@ -26,12 +30,12 @@ COOKIES_DB   = r"C:\Users\User\AppData\Roaming\wmux\Network\Cookies"
 COOKIES_TMP  = r"C:\Users\User\AppData\Local\Temp\wmux_cookies_tmp"
 
 # ── Telegram ─────────────────────────────────────────────────
-TG_TOKEN  = "8908034513:AAHVLvO9IXF7X9ua3w9TYoSInaBVxzSuvIk"
+TG_TOKEN  = _secrets.get("TG_TOKEN", "")
 TG_API    = f"https://api.telegram.org/bot{TG_TOKEN}"
 
 # ── Airtable ──────────────────────────────────────────────────
-AT_TOKEN  = "patkGI8IQ5Baf6Itv.092a4b5670dfba7b6b914892002a5dce9070acd341f4669380824902607c22ad"
-AT_BASE   = "appZqWnlMF18ysfmk"
+AT_TOKEN  = _secrets["AT_TOKEN"]
+AT_BASE   = _secrets["AT_BASE"]
 AT_API    = "https://api.airtable.com/v0"
 AT_TABLES = {
     "客戶": "tblyppP7rIazjfo1o",
@@ -456,6 +460,115 @@ def crm_add_customer(name: str, phone: str = "", line_name: str = "", branch: st
     if result.get("id"):
         return f"客戶「{name}」已新增，ID：{result['id']}"
     return f"新增失敗：{result}"
+
+
+@mcp.tool()
+def crm_find_or_create_vehicle(customer_id: str, brand: str, model: str,
+                                year: int = 0, plate: str = "") -> str:
+    """
+    查找客戶是否已有相同廠牌+型號的車輛，有則回傳現有記錄 ID，沒有才新建。
+    避免重複建立車輛記錄。
+    customer_id: 客戶 Airtable record ID（rec...）
+    brand: 廠牌（如 Toyota）
+    model: 型號（如 Camry）
+    year: 年分（選填）
+    plate: 車牌號碼（選填）
+    """
+    formula = (
+        f"AND(FIND('{customer_id}',ARRAYJOIN({{所屬客戶}})),"
+        f"{{廠牌}}='{brand}',{{型號}}='{model}')"
+    )
+    data = _at_get("車輛", {"filterByFormula": formula, "maxRecords": 5})
+    existing = data.get("records", [])
+    if existing:
+        rec = existing[0]
+        f = rec.get("fields", {})
+        return (f"車輛已存在，ID：{rec['id']}\n"
+                f"  {f.get('廠牌','')} {f.get('型號','')}  車牌：{f.get('車牌號碼','—')}")
+
+    fields: dict = {
+        "所屬客戶": [customer_id],
+        "廠牌": brand,
+        "型號": model,
+    }
+    if year:  fields["年分"]   = year
+    if plate: fields["車牌號碼"] = plate
+    result = _at_post("車輛", fields)
+    if result.get("id"):
+        return f"新建車輛成功，ID：{result['id']}\n  {brand} {model}  車牌：{plate or '—'}"
+    return f"新建車輛失敗：{result}"
+
+
+@mcp.tool()
+def crm_create_case(customer_id: str, vehicle_id: str = "",
+                    branch: str = "", damage: str = "", price_range: str = "") -> str:
+    """
+    建立新案件，並自動連結客戶與車輛。
+    customer_id: 客戶 record ID（必填）
+    vehicle_id:  車輛 record ID（建議填，從 crm_find_or_create_vehicle 取得）
+    branch:      指定分店（台北士林店 / 新北中和店 / 新北板橋店 / 台北濱江店 /
+                            桃園平鎮店 / 新竹竹北店 / 台中南屯店 / 高雄楠梓電）
+    damage:      損傷說明
+    price_range: 網路區間報價
+    """
+    fields: dict = {"所屬客戶": [customer_id]}
+    if vehicle_id:  fields["所屬車輛"]   = [vehicle_id]
+    if branch:      fields["指定分店"]   = branch
+    if damage:      fields["損傷說明"]   = damage
+    if price_range: fields["網路區間報價"] = price_range
+
+    result = _at_post("案件", fields)
+    if result.get("id"):
+        case_no = result.get("fields", {}).get("案件編號", "—")
+        return (f"案件建立成功！案件編號：{case_no}\n"
+                f"  ID：{result['id']}\n"
+                f"  客戶：{customer_id}  車輛：{vehicle_id or '未指定'}\n"
+                f"  分店：{branch or '未指定'}")
+    return f"建立案件失敗：{result}"
+
+
+@mcp.tool()
+def crm_dedup_vehicles() -> str:
+    """
+    掃描車輛資料表，找出同一客戶下廠牌+型號重複的車輛記錄並列出。
+    只回報，不刪除。確認後可執行 airtable_dedup_vehicles.py --execute 實際清除。
+    """
+    def fetch_all_cars():
+        records, offset = [], None
+        while True:
+            params = {"pageSize": 100}
+            if offset:
+                params["offset"] = offset
+            r = requests.get(f"{AT_API}/{AT_BASE}/{AT_TABLES['車輛']}",
+                             headers=AT_HEADERS, params=params)
+            data = r.json()
+            records.extend(data.get("records", []))
+            offset = data.get("offset")
+            if not offset:
+                break
+        return records
+
+    cars = fetch_all_cars()
+    groups: dict = {}
+    for car in cars:
+        flds = car.get("fields", {})
+        cust = (flds.get("所屬客戶") or ["無客戶"])[0]
+        key  = (cust, flds.get("廠牌","").strip(), flds.get("型號","").strip())
+        groups.setdefault(key, []).append(car)
+
+    dups = {k: v for k, v in groups.items() if len(v) > 1}
+    if not dups:
+        return f"車輛資料共 {len(cars)} 筆，未發現重複記錄。"
+
+    lines = [f"車輛資料共 {len(cars)} 筆，發現 {len(dups)} 組重複：\n"]
+    total_extra = 0
+    for (cust, brand, model), recs in dups.items():
+        extra = len(recs) - 1
+        total_extra += extra
+        plates = [r.get("fields",{}).get("車牌號碼","—") for r in recs]
+        lines.append(f"  {brand} {model}  ×{len(recs)} 筆  車牌：{', '.join(plates)}")
+    lines.append(f"\n共 {total_extra} 筆多餘記錄，執行 airtable_dedup_vehicles.py --execute 可清除。")
+    return "\n".join(lines)
 
 
 @mcp.tool()
