@@ -4,9 +4,9 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 from datetime import datetime, timezone, timedelta
 
-# ── Config ────────────────────────────────────────────────────
-AT_TOKEN  = "patkGI8IQ5Baf6Itv.092a4b5670dfba7b6b914892002a5dce9070acd341f4669380824902607c22ad"
-AT_BASE   = "appZqWnlMF18ysfmk"
+# ── Config（從 st.secrets 讀取，本地用 .streamlit/secrets.toml）─
+AT_TOKEN  = st.secrets["AT_TOKEN"]
+AT_BASE   = st.secrets["AT_BASE"]
 AT_API    = "https://api.airtable.com/v0"
 AT_TABLES = {
     "客戶資料": "tblyppP7rIazjfo1o",
@@ -15,7 +15,7 @@ AT_TABLES = {
 }
 AT_HEADERS = {"Authorization": f"Bearer {AT_TOKEN}"}
 
-TG_TOKEN = "8908034513:AAHVLvO9IXF7X9ua3w9TYoSInaBVxzSuvIk"
+TG_TOKEN = st.secrets["TG_TOKEN"]
 TG_API   = f"https://api.telegram.org/bot{TG_TOKEN}"
 TW       = timezone(timedelta(hours=8))
 

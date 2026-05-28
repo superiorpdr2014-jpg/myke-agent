@@ -1,3 +1,4 @@
+.streamlit/secrets.toml
 timetree_auth.json
 timetree_api_responses.json
 timetree_raw.txt
