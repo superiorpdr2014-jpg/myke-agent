@@ -55,6 +55,29 @@ The main change is that `findOrCreateVehicle` checks if the same brand + model a
 
 ---
 
+## Bug Fix — Vehicle Lookup (2026-05-28)
+
+Hey Myke, found the root cause of the duplicate vehicles still appearing after the first integration.
+
+**The problem:** The original `findOrCreateVehicle` used `ARRAYJOIN({所屬客戶})` in the Airtable formula to match the customer ID. But `ARRAYJOIN` on a linked record field returns the customer's **display name**, not their record ID — so `FIND(customerId)` always failed, and a new vehicle record was created every time.
+
+**The fix:** We now filter by brand + model only in the Airtable formula, then match the `customerId` in JavaScript after the results come back:
+
+```js
+// Before (broken) — ARRAYJOIN returns names, not IDs
+const formula = `AND(FIND('${customerId}', ARRAYJOIN({所屬客戶})), {廠牌}='${brand}', {型號}='${model}')`;
+
+// After (fixed) — filter in JS where we have the actual record IDs
+const formula = `AND({廠牌}='${brand}', {型號}='${model}')`;
+const match = records.find(rec =>
+  (rec.fields['所屬客戶'] || []).includes(customerId)
+);
+```
+
+**Action required:** Pull the latest `echo_airtable_crm.js` and restart the server. The fix is already in the repo.
+
+---
+
 ## Human Agent Quote Detection
 
 Hey Myke, I've added one more feature to the CRM module — automatic quote detection for when a human agent takes over.
