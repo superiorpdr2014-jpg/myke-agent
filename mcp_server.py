@@ -1,6 +1,6 @@
 """
 Myke Agent MCP Server
-讓 Claude 桌面 app 直接執行晨報、IG 數據、行事曆查詢
+讓 Claude 桌面 app 直接執行晨報、IG 數據、行事曆查詢、Telegram、Airtable CRM
 """
 import sys, os, json, time, sqlite3, shutil
 
@@ -24,6 +24,21 @@ CALENDAR_URL = "https://timetreeapp.com/calendars/TEjWVnDzaE17"
 AUTH_FILE    = os.path.join(AGENT_DIR, "timetree_auth.json")
 COOKIES_DB   = r"C:\Users\User\AppData\Roaming\wmux\Network\Cookies"
 COOKIES_TMP  = r"C:\Users\User\AppData\Local\Temp\wmux_cookies_tmp"
+
+# ── Telegram ─────────────────────────────────────────────────
+TG_TOKEN  = "8908034513:AAHVLvO9IXF7X9ua3w9TYoSInaBVxzSuvIk"
+TG_API    = f"https://api.telegram.org/bot{TG_TOKEN}"
+
+# ── Airtable ──────────────────────────────────────────────────
+AT_TOKEN  = "patkGI8IQ5Baf6Itv.092a4b5670dfba7b6b914892002a5dce9070acd341f4669380824902607c22ad"
+AT_BASE   = "appZqWnlMF18ysfmk"
+AT_API    = "https://api.airtable.com/v0"
+AT_TABLES = {
+    "客戶": "tblyppP7rIazjfo1o",
+    "車輛": "tblck9rVDwxf3oeoE",
+    "案件": "tblKQfzgfLg8AYiuQ",
+}
+AT_HEADERS = {"Authorization": f"Bearer {AT_TOKEN}", "Content-Type": "application/json"}
 
 TW = timezone(timedelta(hours=8))
 WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
@@ -270,6 +285,202 @@ def calendar_week() -> str:
                 lines.append(f"  {ts}  {t}" + (f"  / {n}" if n else ""))
         else:
             lines.append("  （無排程）")
+    return "\n".join(lines)
+
+
+# ── Telegram Tools ────────────────────────────────────────────
+
+@mcp.tool()
+def telegram_get_messages(limit: int = 20) -> str:
+    """
+    讀取 SUPERIOR ECHO Bot 最新收到的 Telegram 訊息。
+    顯示發話人、群組名稱、訊息內容與時間。
+    limit: 最多讀幾則（預設 20）
+    """
+    r = requests.get(f"{TG_API}/getUpdates", params={"limit": min(limit, 100), "allowed_updates": ["message"]})
+    data = r.json()
+    if not data.get("ok"):
+        return f"Telegram 錯誤：{data.get('description', '未知錯誤')}"
+
+    updates = data.get("result", [])
+    if not updates:
+        return "目前無新訊息（Bot 尚未收到任何對話，或訊息已被讀取清空）"
+
+    lines = [f"ECHO Bot 最新 {len(updates)} 則訊息：\n"]
+    for u in updates[-limit:]:
+        msg  = u.get("message") or u.get("channel_post") or {}
+        if not msg:
+            continue
+        chat     = msg.get("chat", {})
+        sender   = msg.get("from", {})
+        text     = msg.get("text", "[非文字訊息]")
+        ts       = datetime.fromtimestamp(msg.get("date", 0), tz=TW).strftime("%m/%d %H:%M")
+        name     = sender.get("first_name", "") + " " + sender.get("last_name", "")
+        username = f"@{sender['username']}" if sender.get("username") else name.strip()
+        chat_name = chat.get("title") or chat.get("username") or "私訊"
+        chat_id   = chat.get("id", "")
+        lines.append(f"[{ts}] {chat_name} (id:{chat_id})")
+        lines.append(f"  {username}：{text[:200]}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def telegram_send_message(chat_id: str, message: str) -> str:
+    """
+    透過 SUPERIOR ECHO Bot 發送 Telegram 訊息到指定群組或用戶。
+    chat_id: 群組或用戶的 ID（從 telegram_get_messages 取得）
+    message: 要發送的訊息內容
+    """
+    r = requests.post(f"{TG_API}/sendMessage", json={
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "HTML"
+    })
+    data = r.json()
+    if data.get("ok"):
+        return f"訊息已發送到 {chat_id}"
+    return f"發送失敗：{data.get('description', '未知錯誤')}"
+
+
+# ── Airtable Tools ─────────────────────────────────────────────
+
+def _at_get(table_key: str, params: dict) -> dict:
+    url = f"{AT_API}/{AT_BASE}/{AT_TABLES[table_key]}"
+    r = requests.get(url, headers=AT_HEADERS, params=params)
+    return r.json()
+
+def _at_post(table_key: str, fields: dict) -> dict:
+    url = f"{AT_API}/{AT_BASE}/{AT_TABLES[table_key]}"
+    r = requests.post(url, headers=AT_HEADERS, json={"fields": fields})
+    return r.json()
+
+def _at_patch(table_key: str, record_id: str, fields: dict) -> dict:
+    url = f"{AT_API}/{AT_BASE}/{AT_TABLES[table_key]}/{record_id}"
+    r = requests.patch(url, headers=AT_HEADERS, json={"fields": fields})
+    return r.json()
+
+def _fmt_customer(rec: dict) -> str:
+    f = rec.get("fields", {})
+    lines = [f"  客戶：{f.get('客戶名稱','—')}  電話：{f.get('客戶電話','—')}"]
+    if f.get("指定分店"):    lines.append(f"  分店：{f['指定分店']}")
+    if f.get("服務進度"):    lines.append(f"  進度：{f['服務進度']}")
+    if f.get("客戶LINE名稱"): lines.append(f"  LINE：{f['客戶LINE名稱']}")
+    lines.append(f"  ID：{rec['id']}")
+    return "\n".join(lines)
+
+def _fmt_case(rec: dict) -> str:
+    f = rec.get("fields", {})
+    lines = [f"  案件：{f.get('案件編號','—')}  狀態：{f.get('案件狀態','—')}"]
+    if f.get("損傷說明"):        lines.append(f"  說明：{f['損傷說明'][:80]}")
+    if f.get("指定分店"):        lines.append(f"  分店：{f['指定分店']}")
+    if f.get("實際到店報價"):    lines.append(f"  報價：{f['實際到店報價']}")
+    if f.get("派單時間"):        lines.append(f"  派單：{f['派單時間']}")
+    lines.append(f"  ID：{rec['id']}")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def crm_search_customer(keyword: str) -> str:
+    """
+    在 Airtable 客戶資料表搜尋客戶。
+    keyword: 客戶名稱、電話、LINE名稱（部分符合）
+    """
+    formula = f"OR(FIND('{keyword}',{{客戶名稱}}),FIND('{keyword}',{{客戶電話}}),FIND('{keyword}',{{客戶LINE名稱}}))"
+    data = _at_get("客戶", {"filterByFormula": formula, "maxRecords": 10})
+    records = data.get("records", [])
+    if not records:
+        return f"找不到符合「{keyword}」的客戶"
+    lines = [f"找到 {len(records)} 位客戶：\n"]
+    for rec in records:
+        lines.append(_fmt_customer(rec))
+        lines.append("")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def crm_get_cases(status: str = "") -> str:
+    """
+    查詢 Airtable 案件記錄。
+    status: 篩選案件狀態（如「待報價」「修復中」「已完成」），空白則回傳最新 20 筆
+    """
+    params = {"maxRecords": 20, "sort[0][field]": "派單時間", "sort[0][direction]": "desc"}
+    if status:
+        params["filterByFormula"] = f"{{案件狀態}}='{status}'"
+    data = _at_get("案件", params)
+    records = data.get("records", [])
+    if not records:
+        return f"找不到{'狀態為「'+status+'」的' if status else ''}案件"
+    lines = [f"案件記錄（{len(records)} 筆）：\n"]
+    for rec in records:
+        lines.append(_fmt_case(rec))
+        lines.append("")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def crm_update_case(record_id: str, status: str = "", note: str = "", quote: str = "") -> str:
+    """
+    更新 Airtable 案件記錄。
+    record_id: 案件的 Airtable ID（從 crm_get_cases 取得，格式 rec...）
+    status: 新的案件狀態
+    note: 損傷說明備註
+    quote: 實際到店報價
+    """
+    fields = {}
+    if status: fields["案件狀態"] = status
+    if note:   fields["損傷說明"] = note
+    if quote:  fields["實際到店報價"] = quote
+    if not fields:
+        return "請至少提供一個要更新的欄位（status / note / quote）"
+    result = _at_patch("案件", record_id, fields)
+    if result.get("id"):
+        return f"案件 {record_id} 更新成功：{fields}"
+    return f"更新失敗：{result}"
+
+
+@mcp.tool()
+def crm_add_customer(name: str, phone: str = "", line_name: str = "", branch: str = "") -> str:
+    """
+    在 Airtable 新增客戶資料。
+    name: 客戶名稱（必填）
+    phone: 電話號碼
+    line_name: LINE 顯示名稱
+    branch: 指定分店
+    """
+    fields = {"客戶名稱": name}
+    if phone:     fields["客戶電話"] = phone
+    if line_name: fields["客戶LINE名稱"] = line_name
+    if branch:    fields["指定分店"] = branch
+    result = _at_post("客戶", fields)
+    if result.get("id"):
+        return f"客戶「{name}」已新增，ID：{result['id']}"
+    return f"新增失敗：{result}"
+
+
+@mcp.tool()
+def crm_summary() -> str:
+    """
+    查詢 Airtable ECHO CRM 整體數據摘要：
+    客戶總數、案件總數、各狀態案件數量。
+    """
+    customers = _at_get("客戶", {"fields[]": "客戶名稱"})
+    cases     = _at_get("案件", {"fields[]": ["案件狀態"], "maxRecords": 200})
+
+    total_customers = len(customers.get("records", []))
+    case_records    = cases.get("records", [])
+    status_count: dict = {}
+    for rec in case_records:
+        s = rec.get("fields", {}).get("案件狀態", "未設定")
+        status_count[s] = status_count.get(s, 0) + 1
+
+    now   = datetime.now(TW)
+    lines = [f"ECHO CRM 數據摘要（{now.strftime('%m/%d %H:%M')}）\n"]
+    lines.append(f"客戶總數：{total_customers} 位")
+    lines.append(f"案件總數：{len(case_records)} 筆\n")
+    lines.append("案件狀態分佈：")
+    for s, c in sorted(status_count.items(), key=lambda x: -x[1]):
+        lines.append(f"  {s}：{c} 筆")
     return "\n".join(lines)
 
 
