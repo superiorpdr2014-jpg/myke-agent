@@ -135,7 +135,7 @@ with tab1:
         styled = df[display_cols]
         if "服務進度" in styled.columns:
             st.dataframe(
-                styled.style.applymap(style_status, subset=["服務進度"]),
+                styled.style.map(style_status, subset=["服務進度"]),
                 use_container_width=True, hide_index=True,
             )
         else:
@@ -191,7 +191,7 @@ with tab3:
         styled = df[display_cols]
         if "案件狀態" in styled.columns:
             st.dataframe(
-                styled.style.applymap(style_status, subset=["案件狀態"]),
+                styled.style.map(style_status, subset=["案件狀態"]),
                 use_container_width=True, hide_index=True,
             )
         else:
