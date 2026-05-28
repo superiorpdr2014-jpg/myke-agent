@@ -94,16 +94,20 @@ async function findOrCreateCustomer({ lineUserId, lineName = '', phone = '', bra
  * @returns {{ id: string, created: boolean, fields: Object }}
  */
 async function findOrCreateVehicle(customerId, { brand, model, year = 0, plate = '' }) {
-  const formula = `AND(FIND('${customerId}',ARRAYJOIN({所屬客戶})),{廠牌}='${brand}',{型號}='${model}')`;
-  const data = await atGet('vehicle', { filterByFormula: formula, maxRecords: 1 });
+  // Filter by brand + model only — ARRAYJOIN returns display names not IDs,
+  // so we can't use it to match customerId. Instead we filter in JS after fetch.
+  const formula = `AND({廠牌}='${brand}',{型號}='${model}')`;
+  const data = await atGet('vehicle', { filterByFormula: formula, maxRecords: 100 });
 
-  if (data.records && data.records.length > 0) {
-    const rec = data.records[0];
-    // Update plate if now known
-    if (plate && !rec.fields['車牌號碼']) {
-      await atPatch('vehicle', rec.id, { '車牌號碼': plate });
+  const match = (data.records || []).find(rec =>
+    (rec.fields['所屬客戶'] || []).includes(customerId)
+  );
+
+  if (match) {
+    if (plate && !match.fields['車牌號碼']) {
+      await atPatch('vehicle', match.id, { '車牌號碼': plate });
     }
-    return { id: rec.id, created: false, fields: rec.fields };
+    return { id: match.id, created: false, fields: match.fields };
   }
 
   // Not found → create
