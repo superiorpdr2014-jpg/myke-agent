@@ -542,11 +542,19 @@ def crm_create_case(customer_id: str, vehicle_id: str = "",
     damage:      損傷說明
     price_range: 網路區間報價
     """
+    # If no branch given, inherit from customer record
+    resolved_branch = branch
+    if not resolved_branch:
+        cust = _at_get("客戶", {"filterByFormula": f"RECORD_ID()='{customer_id}'"})
+        recs = cust.get("records", [])
+        if recs:
+            resolved_branch = recs[0].get("fields", {}).get("指定分店", "")
+
     fields: dict = {"所屬客戶": [customer_id]}
-    if vehicle_id:  fields["所屬車輛"]   = [vehicle_id]
-    if branch:      fields["指定分店"]   = branch
-    if damage:      fields["損傷說明"]   = damage
-    if price_range: fields["網路區間報價"] = price_range
+    if vehicle_id:       fields["所屬車輛"]    = [vehicle_id]
+    if resolved_branch:  fields["指定分店"]    = resolved_branch
+    if damage:           fields["損傷說明"]    = damage
+    if price_range:      fields["網路區間報價"] = price_range
 
     result = _at_post("案件", fields)
     if result.get("id"):
@@ -554,7 +562,7 @@ def crm_create_case(customer_id: str, vehicle_id: str = "",
         return (f"案件建立成功！案件編號：{case_no}\n"
                 f"  ID：{result['id']}\n"
                 f"  客戶：{customer_id}  車輛：{vehicle_id or '未指定'}\n"
-                f"  分店：{branch or '未指定'}")
+                f"  分店：{resolved_branch or '未指定'}")
     return f"建立案件失敗：{result}"
 
 

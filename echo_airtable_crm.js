@@ -129,11 +129,18 @@ async function findOrCreateVehicle(customerId, { brand, model, year = 0, plate =
  * @returns {{ id: string, caseNumber: number, fields: Object }}
  */
 async function createCase(customerId, vehicleId, { branch = '', damage = '', priceRange = '' } = {}) {
+  // If no branch provided, inherit from the customer record
+  let resolvedBranch = branch;
+  if (!resolvedBranch) {
+    const custRes = await axios.get(`${AT_API}/${TABLES.customer}/${customerId}`, { headers });
+    resolvedBranch = custRes.data?.fields?.['指定分店'] || '';
+  }
+
   const fields = { '所屬客戶': [customerId] };
-  if (vehicleId)   fields['所屬車輛']   = [vehicleId];
-  if (branch)      fields['指定分店']   = branch;
-  if (damage)      fields['損傷說明']   = damage;
-  if (priceRange)  fields['網路區間報價'] = priceRange;
+  if (vehicleId)       fields['所屬車輛']    = [vehicleId];
+  if (resolvedBranch)  fields['指定分店']    = resolvedBranch;
+  if (damage)          fields['損傷說明']    = damage;
+  if (priceRange)      fields['網路區間報價'] = priceRange;
 
   const created = await atPost('case', fields);
   return {
