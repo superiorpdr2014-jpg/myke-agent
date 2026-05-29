@@ -1,0 +1,409 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "台北地區",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "12px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 台北士林店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "台北市士林區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "separator"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 台北濱江店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "台北市中山區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 士林店",
+              "data": "action=select_branch&branch=台北士林店",
+              "displayText": "我選擇台北士林店"
+            }
+          },
+          {
+            "type": "button",
+            "style": "secondary",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 濱江店",
+              "data": "action=select_branch&branch=台北濱江店",
+              "displayText": "我選擇台北濱江店"
+            }
+          }
+        ],
+        "paddingAll": "12px"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "新北地區",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "12px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 新北中和店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "新北市中和區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "separator"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 新北板橋店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "新北市板橋區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 中和店",
+              "data": "action=select_branch&branch=新北中和店",
+              "displayText": "我選擇新北中和店"
+            }
+          },
+          {
+            "type": "button",
+            "style": "secondary",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 板橋店",
+              "data": "action=select_branch&branch=新北板橋店",
+              "displayText": "我選擇新北板橋店"
+            }
+          }
+        ],
+        "paddingAll": "12px"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "桃園 / 新竹",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "12px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 桃園平鎮店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "桃園市平鎮區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "separator"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 新竹竹北店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "新竹縣竹北市（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 平鎮店",
+              "data": "action=select_branch&branch=桃園平鎮店",
+              "displayText": "我選擇桃園平鎮店"
+            }
+          },
+          {
+            "type": "button",
+            "style": "secondary",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 竹北店",
+              "data": "action=select_branch&branch=新竹竹北店",
+              "displayText": "我選擇新竹竹北店"
+            }
+          }
+        ],
+        "paddingAll": "12px"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "台中 / 高雄",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "12px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 台中南屯店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "台中市南屯區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          },
+          {
+            "type": "separator"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "📍 高雄楠梓店",
+                "weight": "bold",
+                "size": "sm",
+                "color": "#1B2A4A"
+              },
+              {
+                "type": "text",
+                "text": "高雄市楠梓區（地址請填入）",
+                "size": "xs",
+                "color": "#888888",
+                "wrap": true
+              }
+            ]
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 台中南屯店",
+              "data": "action=select_branch&branch=台中南屯店",
+              "displayText": "我選擇台中南屯店"
+            }
+          },
+          {
+            "type": "button",
+            "style": "secondary",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 高雄楠梓店",
+              "data": "action=select_branch&branch=高雄楠梓店",
+              "displayText": "我選擇高雄楠梓店"
+            }
+          }
+        ],
+        "paddingAll": "12px"
+      }
+    }
+  ]
+}

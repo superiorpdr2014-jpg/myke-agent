@@ -1,0 +1,107 @@
+{
+  "type": "bubble",
+  "size": "mega",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "SUPERIOR PDR",
+            "weight": "bold",
+            "size": "xl",
+            "color": "#FFFFFF",
+            "flex": 1
+          },
+          {
+            "type": "text",
+            "text": "✦",
+            "color": "#C9A84C",
+            "size": "lg",
+            "align": "end"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "卓越凹痕修復中心",
+        "size": "xs",
+        "color": "#AAAACC",
+        "margin": "xs"
+      }
+    ],
+    "backgroundColor": "#1B2A4A",
+    "paddingAll": "20px"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "md",
+    "contents": [
+      {
+        "type": "text",
+        "text": "請問今天需要什麼服務呢？",
+        "wrap": true,
+        "size": "md",
+        "weight": "bold",
+        "color": "#1B2A4A"
+      },
+      {
+        "type": "text",
+        "text": "請點選下方按鈕，我們的 AI 客服將為您服務 👇",
+        "wrap": true,
+        "size": "xs",
+        "color": "#888888",
+        "margin": "sm"
+      }
+    ],
+    "paddingAll": "20px"
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "primary",
+        "color": "#1B2A4A",
+        "height": "md",
+        "action": {
+          "type": "postback",
+          "label": "🔍 車輛凹痕評估",
+          "data": "action=dent_assessment",
+          "displayText": "我想要進行車輛凹痕評估"
+        }
+      },
+      {
+        "type": "button",
+        "style": "secondary",
+        "height": "md",
+        "action": {
+          "type": "postback",
+          "label": "📍 分店資訊查詢",
+          "data": "action=branch_info",
+          "displayText": "我想查詢分店資訊"
+        }
+      },
+      {
+        "type": "button",
+        "style": "secondary",
+        "height": "md",
+        "action": {
+          "type": "postback",
+          "label": "📞 客訴處理",
+          "data": "action=complaint",
+          "displayText": "我有問題想反映"
+        }
+      }
+    ],
+    "paddingAll": "16px",
+    "backgroundColor": "#F8F8F8"
+  }
+}
