@@ -96,7 +96,7 @@ async function findOrCreateCustomer({ lineUserId, lineName = '', phone = '', bra
 async function findOrCreateVehicle(customerId, { brand, model, year = 0, plate = '' }) {
   // Filter by brand + model only — ARRAYJOIN returns display names not IDs,
   // so we can't use it to match customerId. Instead we filter in JS after fetch.
-  const formula = `AND({廠牌}='${brand}',{型號}='${model}')`;
+  const formula = `AND(LOWER({廠牌})='${brand.toLowerCase()}',LOWER({型號})='${model.toLowerCase()}')`;
   const data = await atGet('vehicle', { filterByFormula: formula, maxRecords: 100 });
 
   const match = (data.records || []).find(rec =>

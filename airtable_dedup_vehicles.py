@@ -50,7 +50,7 @@ def main(dry_run: bool):
     for car in cars:
         flds = car.get("fields", {})
         cust = (flds.get("所屬客戶") or [""])[0]
-        key  = (cust, flds.get("廠牌","").strip(), flds.get("型號","").strip())
+        key  = (cust, flds.get("廠牌","").strip().lower(), flds.get("型號","").strip().lower())
         groups.setdefault(key, []).append(car)
 
     dups = {k: v for k, v in groups.items() if len(v) > 1}

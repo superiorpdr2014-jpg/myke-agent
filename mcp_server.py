@@ -507,7 +507,7 @@ def crm_find_or_create_vehicle(customer_id: str, brand: str, model: str,
     """
     # ARRAYJOIN returns display names not IDs — filter by brand+model only,
     # then match customerId in Python to avoid false misses.
-    formula = f"AND({{廠牌}}='{brand}',{{型號}}='{model}')"
+    formula = f"AND(LOWER({{廠牌}})='{brand.lower()}',LOWER({{型號}})='{model.lower()}')"
     data = _at_get("車輛", {"filterByFormula": formula, "maxRecords": 100})
     existing = [r for r in data.get("records", [])
                 if customer_id in r.get("fields", {}).get("所屬客戶", [])]
