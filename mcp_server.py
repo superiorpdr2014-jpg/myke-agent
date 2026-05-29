@@ -2,7 +2,8 @@
 Myke Agent MCP Server
 讓 Claude 桌面 app 直接執行晨報、IG 數據、行事曆查詢、Telegram、Airtable CRM
 """
-import sys, os, json, time, sqlite3, shutil, tomllib, pathlib
+import sys, os, json, time, sqlite3, shutil, tomllib, pathlib, imaplib, email, textwrap
+from email.header import decode_header
 
 # Ensure working directory is Myke_Agent
 AGENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -32,6 +33,20 @@ COOKIES_TMP  = r"C:\Users\User\AppData\Local\Temp\wmux_cookies_tmp"
 # ── Telegram ─────────────────────────────────────────────────
 TG_TOKEN  = _secrets.get("TG_TOKEN", "")
 TG_API    = f"https://api.telegram.org/bot{TG_TOKEN}"
+
+# ── Gmail ─────────────────────────────────────────────────────
+GMAIL_USER = _secrets.get("GMAIL_USER", "")
+GMAIL_PASS = _secrets.get("GMAIL_PASS", "")
+GMAIL_INQUIRY_KW = [
+    "凹痕", "修復", "報價", "pdr", "板金", "保險桿", "掉漆", "維修",
+    "dent", "repair", "quote", "estimate", "appointment", "booking",
+    "合作", "詢問", "inquiry", "collaboration",
+]
+GMAIL_SKIP_SENDERS = [
+    "noreply", "no-reply", "netflix", "paypal", "amazon", "strava",
+    "dropbox", "openai", "anthropic", "ups", "dbs.com", "sinopac",
+    "americanexpress", "amex", "edm", "shopifyemail",
+]
 
 # ── Airtable ──────────────────────────────────────────────────
 AT_TOKEN  = _secrets["AT_TOKEN"]
@@ -217,6 +232,29 @@ def morning_report() -> str:
         lines.append(f"    愛心 {p.get('like_count',0):,}   留言 {p.get('comments_count',0)}")
         lines.append(f"    {cap}...")
         lines.append(f"    {p.get('permalink','')}")
+
+    # Gmail
+    lines.append(f"\n{'─'*54}")
+    lines.append("【Gmail】soulbreakin@gmail.com")
+    if GMAIL_USER and GMAIL_PASS:
+        try:
+            g_emails = _gmail_fetch(hours=24, max_results=30)
+            inquiries = [e for e in g_emails if e["is_inquiry"]]
+            total = len(g_emails)
+            skipped = sum(1 for e in g_emails if e["is_skip"])
+            lines.append(f"\n  過去 24h 共 {total} 封  |  廣告略過 {skipped}  |  詢問 {len(inquiries)}")
+            if inquiries:
+                lines.append("\n  🔔 需要關注：")
+                for e in inquiries:
+                    lines.append(f"    • {e['sender'][:40]}")
+                    lines.append(f"      {e['subject']}")
+                    lines.append(f"      {e['snippet'][:120]}")
+            else:
+                lines.append("  暫無客戶/業務詢問")
+        except Exception as e:
+            lines.append(f"  Gmail 讀取失敗：{e}")
+    else:
+        lines.append("  （尚未設定）")
 
     lines.append(f"\n{'='*54}\n")
     return "\n".join(lines)
@@ -634,6 +672,161 @@ def crm_summary() -> str:
     for s, c in sorted(status_count.items(), key=lambda x: -x[1]):
         lines.append(f"  {s}：{c} 筆")
     return "\n".join(lines)
+
+
+# ── Gmail helpers ─────────────────────────────────────────────
+def _gmail_decode(value: str) -> str:
+    parts = decode_header(value or "")
+    out = []
+    for b, enc in parts:
+        if isinstance(b, bytes):
+            out.append(b.decode(enc or "utf-8", errors="replace"))
+        else:
+            out.append(b)
+    return "".join(out)
+
+def _gmail_body(msg) -> str:
+    if msg.is_multipart():
+        for part in msg.walk():
+            if part.get_content_type() == "text/plain" and "attachment" not in str(part.get("Content-Disposition", "")):
+                payload = part.get_payload(decode=True)
+                charset = part.get_content_charset() or "utf-8"
+                return payload.decode(charset, errors="replace")
+    else:
+        payload = msg.get_payload(decode=True)
+        charset = msg.get_content_charset() or "utf-8"
+        return payload.decode(charset, errors="replace") if payload else ""
+    return ""
+
+def _gmail_is_skip(sender: str) -> bool:
+    s = sender.lower()
+    return any(kw in s for kw in GMAIL_SKIP_SENDERS)
+
+def _gmail_is_inquiry(subject: str, body: str) -> bool:
+    text = (subject + " " + body[:500]).lower()
+    return any(kw in text for kw in GMAIL_INQUIRY_KW)
+
+def _gmail_fetch(hours: int = 24, max_results: int = 50) -> list:
+    conn = imaplib.IMAP4_SSL("imap.gmail.com")
+    conn.login(GMAIL_USER, GMAIL_PASS)
+    conn.select("INBOX")
+    since = (datetime.now(timezone.utc) - timedelta(hours=hours)).strftime("%d-%b-%Y")
+    _, data = conn.search(None, f'(SINCE "{since}")')
+    uid_list = data[0].split() if data[0] else []
+    uid_list = uid_list[-max_results:][::-1]
+    results = []
+    for uid in uid_list:
+        _, msg_data = conn.fetch(uid, "(RFC822)")
+        raw = msg_data[0][1]
+        msg = email.message_from_bytes(raw)
+        subject = _gmail_decode(msg.get("Subject", "(no subject)"))
+        sender  = _gmail_decode(msg.get("From", ""))
+        date_str = msg.get("Date", "")
+        body = _gmail_body(msg)
+        results.append({
+            "uid": uid.decode(),
+            "subject": subject,
+            "sender": sender,
+            "date": date_str,
+            "snippet": textwrap.shorten(body.strip(), width=250, placeholder="..."),
+            "body": body,
+            "is_inquiry": _gmail_is_inquiry(subject, body) and not _gmail_is_skip(sender),
+            "is_skip": _gmail_is_skip(sender),
+        })
+    conn.logout()
+    return results
+
+
+@mcp.tool()
+def email_summary(hours: int = 24) -> str:
+    """
+    查看 Jay 的 Gmail（soulbreakin@gmail.com）最近的信件摘要。
+    自動分類：客戶/業務詢問優先顯示，廣告/系統信件過濾。
+    hours: 查詢過去幾小時（預設 24）
+    """
+    if not GMAIL_USER or not GMAIL_PASS:
+        return "Gmail 尚未設定，請在 secrets.toml 加入 GMAIL_USER 和 GMAIL_PASS。"
+    try:
+        emails = _gmail_fetch(hours=hours)
+    except Exception as e:
+        return f"Gmail 連線失敗：{e}"
+
+    if not emails:
+        return f"過去 {hours} 小時沒有新信件。"
+
+    inquiries = [e for e in emails if e["is_inquiry"]]
+    normal    = [e for e in emails if not e["is_inquiry"] and not e["is_skip"]]
+    skipped   = [e for e in emails if e["is_skip"]]
+
+    now = datetime.now(TW)
+    lines = [f"Gmail 信件摘要（過去 {hours}h）— {now.strftime('%m/%d %H:%M')}",
+             f"共 {len(emails)} 封  |  詢問 {len(inquiries)}  |  一般 {len(normal)}  |  略過廣告 {len(skipped)}\n"]
+
+    if inquiries:
+        lines.append(f"🔔 客戶 / 業務詢問（{len(inquiries)} 封）")
+        lines.append("─" * 50)
+        for e in inquiries:
+            lines.append(f"寄件：{e['sender']}")
+            lines.append(f"主旨：{e['subject']}")
+            lines.append(f"時間：{e['date'][:30]}")
+            lines.append(f"內容：{e['snippet']}")
+            lines.append("")
+
+    if normal:
+        lines.append(f"📬 一般信件（{len(normal)} 封）")
+        lines.append("─" * 50)
+        for e in normal:
+            lines.append(f"  • {e['date'][:20]}  {e['sender'][:35]}  |  {e['subject']}")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def email_draft_reply(uid: str) -> str:
+    """
+    根據指定 email UID 產生繁體中文回覆草稿建議。
+    uid：從 email_summary 取得的信件 UID。
+    """
+    if not GMAIL_USER or not GMAIL_PASS:
+        return "Gmail 尚未設定。"
+    try:
+        conn = imaplib.IMAP4_SSL("imap.gmail.com")
+        conn.login(GMAIL_USER, GMAIL_PASS)
+        conn.select("INBOX")
+        _, msg_data = conn.fetch(uid.encode(), "(RFC822)")
+        conn.logout()
+        raw = msg_data[0][1]
+        msg = email.message_from_bytes(raw)
+        subject = _gmail_decode(msg.get("Subject", ""))
+        sender  = _gmail_decode(msg.get("From", ""))
+        body    = _gmail_body(msg)
+        excerpt = textwrap.shorten(body.strip(), width=500, placeholder="...")
+    except Exception as e:
+        return f"讀取信件失敗：{e}"
+
+    return (
+        f"【回覆草稿建議】\n"
+        f"收件人：{sender}\n"
+        f"主旨：Re: {subject}\n\n"
+        f"--- 原始信件摘要 ---\n{excerpt}\n\n"
+        f"--- 請根據以上內容，以繁體中文、代表 SUPERIOR PDR Jay 的口吻，產生專業且友善的回覆草稿 ---"
+    )
+
+
+@mcp.tool()
+def email_mark_read(uid: str) -> str:
+    """將指定 UID 的 Gmail 信件標記為已讀。"""
+    if not GMAIL_USER or not GMAIL_PASS:
+        return "Gmail 尚未設定。"
+    try:
+        conn = imaplib.IMAP4_SSL("imap.gmail.com")
+        conn.login(GMAIL_USER, GMAIL_PASS)
+        conn.select("INBOX")
+        conn.store(uid.encode(), "+FLAGS", "\\Seen")
+        conn.logout()
+        return f"UID {uid} 已標記為已讀。"
+    except Exception as e:
+        return f"操作失敗：{e}"
 
 
 if __name__ == "__main__":

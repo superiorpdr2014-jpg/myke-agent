@@ -103,5 +103,12 @@
     ],
     "paddingAll": "16px",
     "backgroundColor": "#F8F8F8"
+  },
+  "hero": {
+    "type": "image",
+    "url": "https://iili.io/C28qjYN.jpg",
+    "size": "full",
+    "aspectRatio": "20:13",
+    "aspectMode": "cover"
   }
 }

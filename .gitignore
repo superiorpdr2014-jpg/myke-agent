@@ -6,3 +6,8 @@ timetree_raw.json
 timetree_screenshot.png
 __pycache__/
 *.pyc
+node_modules/
+.claude/
+行銷部影片/
+*.mov
+*.mp4

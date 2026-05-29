@@ -124,18 +124,38 @@ with tab1:
         if "最後更新時間" in df.columns:
             df = df.sort_values("最後更新時間", ascending=False)
 
-        all_cols = [c for c in df.columns if c != "_id"]
-        # Move 客戶LINE名稱 to position 1 (second column)
-        if "客戶LINE名稱" in all_cols:
-            all_cols.remove("客戶LINE名稱")
-            all_cols.insert(1, "客戶LINE名稱")
-        display_cols = all_cols
-        st.metric("客戶總數", len(df))
+        # 分店篩選
+        branch_col = "指定分店"
+        branches = []
+        if branch_col in df.columns:
+            branches = sorted(df[branch_col].dropna().unique().tolist())
+
+        col_metric, col_branch = st.columns([1, 3])
+        col_metric.metric("客戶總數", len(df))
+        selected_branch = "全部分店"
+        if branches:
+            btn_cols = col_branch.columns(len(branches) + 1)
+            if btn_cols[0].button("全部分店", key="branch_all", use_container_width=True):
+                st.session_state["branch_filter"] = "全部分店"
+            for i, b in enumerate(branches):
+                if btn_cols[i + 1].button(b, key=f"branch_{i}", use_container_width=True):
+                    st.session_state["branch_filter"] = b
+            selected_branch = st.session_state.get("branch_filter", "全部分店")
+            if selected_branch != "全部分店":
+                df = df[df[branch_col] == selected_branch]
+                st.caption(f"📍 {selected_branch}　共 {len(df)} 位客戶")
+
         search = st.text_input("搜尋客戶（姓名 / 電話 / LINE）", key="search_customer")
         if search:
             mask = df.apply(lambda row: row.astype(str).str.contains(search, case=False, na=False).any(), axis=1)
             df = df[mask]
             st.caption(f"找到 {len(df)} 筆")
+
+        # 欄位順序：客戶LINE名稱、服務進度、客戶名稱、指定分店，其餘附後，移除 LINE用戶ID
+        priority = ["客戶LINE名稱", "服務進度", "客戶名稱", "指定分店"]
+        exclude  = {"_id", "LINE用戶ID"}
+        remaining = [c for c in df.columns if c not in priority and c not in exclude]
+        display_cols = [c for c in priority if c in df.columns] + remaining
 
         styled = df[display_cols]
         if "服務進度" in styled.columns:
@@ -173,12 +193,30 @@ with tab3:
             df = df.sort_values("派單時間", ascending=False)
         display_cols = [c for c in df.columns if c != "_id"]
 
+        # 分店篩選按鈕
+        case_branch_col = "指定分店"
+        case_branches = []
+        if case_branch_col in df.columns:
+            case_branches = sorted(df[case_branch_col].dropna().unique().tolist())
+
+        if case_branches:
+            st.markdown("**篩選分店**")
+            b_cols = st.columns(len(case_branches) + 1)
+            if b_cols[0].button("全部分店", key="case_branch_all", use_container_width=True):
+                st.session_state["case_branch_filter"] = "全部分店"
+            for i, b in enumerate(case_branches):
+                if b_cols[i + 1].button(b, key=f"case_branch_{i}", use_container_width=True):
+                    st.session_state["case_branch_filter"] = b
+            sel_case_branch = st.session_state.get("case_branch_filter", "全部分店")
+            if sel_case_branch != "全部分店":
+                df = df[df[case_branch_col] == sel_case_branch]
+
         col1, col2, col3 = st.columns(3)
         col1.metric("案件總數", len(df))
         if "案件狀態" in df.columns:
             status_counts = df["案件狀態"].value_counts()
-            col2.metric("進行中", int(status_counts.get("修復中", 0)))
-            col3.metric("已完成", int(status_counts.get("已完成", 0)))
+            col2.metric("進行中", int(status_counts.get("維修中", 0)))
+            col3.metric("已完成", int(status_counts.get("交車完成", 0)))
             status_filter = st.selectbox(
                 "篩選狀態",
                 ["全部"] + list(df["案件狀態"].dropna().unique()),

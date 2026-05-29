@@ -1,0 +1,651 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28qjYN.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "★ 最推薦",
+                "size": "xxs",
+                "color": "#FFFFFF",
+                "backgroundColor": "#C9A84C",
+                "weight": "bold",
+                "align": "center",
+                "flex": 0,
+                "paddingStart": "8px",
+                "paddingEnd": "8px",
+                "paddingTop": "3px",
+                "paddingBottom": "3px",
+                "cornerRadius": "4px"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "① 免烤漆凹痕修復（PDR）",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF",
+            "margin": "sm"
+          }
+        ],
+        "backgroundColor": "#1B4A2A",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "不傷原廠漆面，使用專業工具從內側推出凹痕，完整保留愛車原廠價值。適合烤漆完好的凹痕損傷。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 不需烤漆",
+                "size": "xxs",
+                "color": "#1B4A2A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 保留原廠漆",
+                "size": "xxs",
+                "color": "#1B4A2A",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B4A2A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 免烤漆凹痕修復（PDR）",
+              "data": "action=select_service&service=PDR",
+              "displayText": "我選擇免烤漆凹痕修復（PDR）"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28oocx.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "② 免烤漆板金大概修",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "快速整形修復，追求效率與性價比的最佳選擇。有無掉漆皆適用，修復後外觀明顯改善。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 快速修復",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 性價比高",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 免烤漆板金大概修",
+              "data": "action=select_service&service=板金大概修",
+              "displayText": "我選擇免烤漆板金大概修"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28ocKJ.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "③ 傳統板金＋烤漆",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "傳統鈑金工法修復車身，搭配烤漆修補，適合掉漆範圍較大或損傷較深的情況。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 含烤漆修補",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 適合大面積",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 傳統板金＋烤漆",
+              "data": "action=select_service&service=傳統板金烤漆",
+              "displayText": "我選擇傳統板金＋烤漆"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28n0T7.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "★ 推薦",
+                "size": "xxs",
+                "color": "#FFFFFF",
+                "backgroundColor": "#C9A84C",
+                "weight": "bold",
+                "align": "center",
+                "flex": 0,
+                "paddingStart": "8px",
+                "paddingEnd": "8px",
+                "paddingTop": "3px",
+                "paddingBottom": "3px",
+                "cornerRadius": "4px"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "④ 高品質凹痕修復＋烤漆",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF",
+            "margin": "sm"
+          }
+        ],
+        "backgroundColor": "#4A2A1B",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "先以 PDR 技術盡可能恢復板件形狀，再進行高品質烤漆修補。適合嚴重掉漆但希望保留最佳修復品質的客戶。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 最佳修復品質",
+                "size": "xxs",
+                "color": "#4A2A1B",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 高品質烤漆",
+                "size": "xxs",
+                "color": "#4A2A1B",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#C9A84C",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 高品質凹痕修復＋烤漆",
+              "data": "action=select_service&service=高品質凹痕修復烤漆",
+              "displayText": "我選擇高品質凹痕修復＋烤漆"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28nPvp.jpg",
+        "size": "full",
+        "aspectRatio": "20:11",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "⑦ 保險桿受損專業處理",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "依保險桿受損程度，由技師評估採修復、整形或換件，搭配烤漆處理，恢復原廠外觀。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 到店免費評估",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 專業技師",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 保險桿受損專業處理",
+              "data": "action=select_service&service=保險桿處理",
+              "displayText": "我選擇保險桿受損專業處理"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C2SnvWX.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "⑤ 汽車美容",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "專業車身清潔與美容服務，包含洗車、拋光、打蠟與內裝清潔，讓愛車恢復亮麗外觀與光澤。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 專業拋光",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 內外清潔",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 汽車美容",
+              "data": "action=select_service&service=汽車美容",
+              "displayText": "我選擇汽車美容服務"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C2SnZX9.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "⑥ 漆面包膜 / 犀牛皮（PPF）",
+            "weight": "bold",
+            "size": "sm",
+            "color": "#FFFFFF"
+          }
+        ],
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": "高透明保護膜完整包覆漆面，有效防止石擊、刮傷與日常損傷，長期維持原廠烤漆光澤。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 防石擊刮傷",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 長效保護",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ],
+            "margin": "sm"
+          }
+        ],
+        "paddingAll": "14px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 漆面包膜 / 犀牛皮",
+              "data": "action=select_service&service=PPF包膜",
+              "displayText": "我選擇漆面包膜/犀牛皮（PPF）"
+            }
+          }
+        ],
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8"
+      }
+    }
+  ]
+}

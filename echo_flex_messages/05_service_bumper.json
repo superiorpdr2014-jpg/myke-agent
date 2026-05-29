@@ -1,169 +1,177 @@
 {
-  "type": "bubble",
-  "size": "mega",
-  "header": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-      {
-        "type": "text",
-        "text": "🔧 保險桿損傷",
-        "weight": "bold",
-        "size": "sm",
-        "color": "#FFFFFF"
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28qjYN.jpg",
+        "size": "full",
+        "aspectRatio": "20:13",
+        "aspectMode": "cover"
       },
-      {
-        "type": "text",
-        "text": "保險桿為塑膠材質，需依狀況評估處理方式",
-        "size": "xs",
-        "color": "#AACCFF",
-        "margin": "xs",
-        "wrap": true
-      }
-    ],
-    "backgroundColor": "#1B2A4A",
-    "paddingAll": "16px"
-  },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "md",
-    "contents": [
-      {
+      "header": {
         "type": "box",
         "layout": "vertical",
-        "spacing": "xs",
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px",
         "contents": [
-          {
-            "type": "text",
-            "text": "💡 技師說明",
-            "weight": "bold",
-            "size": "xs",
-            "color": "#1B2A4A"
-          },
-          {
-            "type": "text",
-            "text": "保險桿是塑膠材質，部分保險桿凹痕可以使用免烤漆凹痕修復（PDR）處理，但許多情況需要鈑金或換件評估。\n\n到店後技師會現場確認，幫您選擇最適合的方案。",
-            "size": "xs",
-            "color": "#555555",
-            "wrap": true
-          }
-        ],
-        "paddingAll": "12px",
-        "backgroundColor": "#EEF4FF",
-        "cornerRadius": "8px"
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "spacing": "xs",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "contents": [
-              {
-                "type": "text",
-                "text": "需評估",
-                "size": "xxs",
-                "color": "#FFFFFF",
-                "backgroundColor": "#1B2A4A",
-                "weight": "bold",
-                "align": "center",
-                "flex": 0,
-                "paddingStart": "6px",
-                "paddingEnd": "6px",
-                "paddingTop": "2px",
-                "paddingBottom": "2px",
-                "cornerRadius": "4px"
-              }
-            ]
-          },
           {
             "type": "text",
             "text": "① 免烤漆凹痕修復（PDR）",
             "weight": "bold",
             "size": "sm",
-            "color": "#1B2A4A"
-          },
-          {
-            "type": "text",
-            "text": "部分保險桿凹痕可以用 PDR 處理，不需烤漆，保留原廠漆面。需現場評估後確認可行性。",
-            "size": "xs",
-            "color": "#666666",
-            "wrap": true
+            "color": "#FFFFFF"
           }
-        ],
-        "paddingAll": "12px",
-        "backgroundColor": "#F5F5F5",
-        "cornerRadius": "8px"
+        ]
       },
-      {
+      "body": {
         "type": "box",
         "layout": "vertical",
-        "spacing": "xs",
+        "spacing": "sm",
+        "paddingAll": "14px",
+        "contents": [
+          {
+            "type": "text",
+            "text": "部分保險桿凹痕可使用 PDR 處理，不需烤漆，保留原廠漆面。需到店由技師現場確認可行性。",
+            "size": "xs",
+            "color": "#555555",
+            "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 不需烤漆",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 到店免費評估",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ]
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "paddingAll": "12px",
+        "backgroundColor": "#F8F8F8",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 PDR 保險桿（需評估）",
+              "data": "action=select_service&service=PDR保險桿",
+              "displayText": "我想詢問 PDR 保險桿修復的可行性"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "mega",
+      "hero": {
+        "type": "image",
+        "url": "https://iili.io/C28nPvp.jpg",
+        "size": "full",
+        "aspectRatio": "20:11",
+        "aspectMode": "cover"
+      },
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#1B2A4A",
+        "paddingAll": "14px",
         "contents": [
           {
             "type": "text",
             "text": "⑦ 保險桿受損專業處理",
             "weight": "bold",
             "size": "sm",
-            "color": "#1B2A4A"
-          },
+            "color": "#FFFFFF"
+          }
+        ]
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "paddingAll": "14px",
+        "contents": [
           {
             "type": "text",
-            "text": "依保險桿受損程度，由技師評估採用修復、整形或換件，搭配烤漆處理，恢復原廠外觀。",
+            "text": "依保險桿受損程度，由技師評估採修復、整形或換件，搭配烤漆處理，恢復原廠外觀。",
             "size": "xs",
-            "color": "#666666",
+            "color": "#555555",
             "wrap": true
+          },
+          {
+            "type": "separator",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "sm",
+            "contents": [
+              {
+                "type": "text",
+                "text": "✅ 專業技師評估",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              },
+              {
+                "type": "text",
+                "text": "✅ 含烤漆修復",
+                "size": "xxs",
+                "color": "#1B2A4A",
+                "flex": 1
+              }
+            ]
           }
-        ],
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
         "paddingAll": "12px",
-        "backgroundColor": "#F5F5F5",
-        "cornerRadius": "8px"
+        "backgroundColor": "#F8F8F8",
+        "contents": [
+          {
+            "type": "button",
+            "style": "primary",
+            "color": "#1B2A4A",
+            "height": "sm",
+            "action": {
+              "type": "postback",
+              "label": "選擇 保險桿受損專業處理",
+              "data": "action=select_service&service=保險桿處理",
+              "displayText": "我選擇保險桿受損專業處理"
+            }
+          }
+        ]
       }
-    ],
-    "paddingAll": "16px"
-  },
-  "footer": {
-    "type": "box",
-    "layout": "vertical",
-    "spacing": "sm",
-    "contents": [
-      {
-        "type": "button",
-        "style": "primary",
-        "color": "#1B2A4A",
-        "height": "sm",
-        "action": {
-          "type": "postback",
-          "label": "① 免烤漆凹痕修復（需評估）",
-          "data": "action=select_service&service=PDR保險桿",
-          "displayText": "我想詢問免烤漆凹痕修復保險桿的可行性"
-        }
-      },
-      {
-        "type": "button",
-        "style": "secondary",
-        "height": "sm",
-        "action": {
-          "type": "postback",
-          "label": "⑦ 保險桿受損專業處理",
-          "data": "action=select_service&service=保險桿處理",
-          "displayText": "我選擇保險桿受損專業處理"
-        }
-      },
-      {
-        "type": "text",
-        "text": "到店後技師現場評估，確認最佳方案，完全免費 🙌",
-        "size": "xxs",
-        "color": "#999999",
-        "wrap": true,
-        "align": "center",
-        "margin": "sm"
-      }
-    ],
-    "paddingAll": "16px",
-    "backgroundColor": "#F8F8F8"
-  }
+    }
+  ]
 }
