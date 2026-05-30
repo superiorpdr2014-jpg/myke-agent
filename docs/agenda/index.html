@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人車故事公益協會｜例會議程</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: #0f1117;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .header .tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #e8a020, #f5c842);
+    color: #0f1117;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .header h2 {
+    color: #e8a020;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .header .meta {
+    color: #888;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  /* 總時間條 */
+  .total-bar {
+    width: 100%;
+    max-width: 860px;
+    background: #1a1d27;
+    border: 1px solid #2a2d3a;
+    border-radius: 12px;
+    padding: 16px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .total-bar .label { color: #aaa; font-size: 13px; }
+  .total-bar .value { color: #e8a020; font-size: 22px; font-weight: 900; }
+  .total-bar .note { color: #666; font-size: 12px; text-align: right; }
+
+  /* 時間軸容器 */
+  .timeline {
+    width: 100%;
+    max-width: 860px;
+    position: relative;
+  }
+
+  /* 垂直線 */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #e8a020 0%, #e8402020 100%);
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  /* 時間標籤 */
+  .step-time {
+    width: 48px;
+    text-align: right;
+    padding-top: 18px;
+    padding-right: 0;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-time span {
+    background: #e8a020;
+    color: #0f1117;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 3px 7px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  /* 圓點 */
+  .step-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin: 14px 18px 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 900;
+    position: relative;
+    z-index: 2;
+    border: 2px solid transparent;
+  }
+
+  /* 卡片 */
+  .step-card {
+    flex: 1;
+    border-radius: 14px;
+    padding: 18px 22px;
+    border: 1px solid transparent;
+    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .step-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .step-title {
+    font-size: 17px;
+    font-weight: 800;
+    flex: 1;
+  }
+
+  .step-duration {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+  }
+
+  .step-desc {
+    color: #bbb;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .step-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .tag-item {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* 顏色主題 */
+  .c1 .step-dot { background: #1a3a5c; border-color: #4a9eff; color: #4a9eff; }
+  .c1 .step-card { background: #111827; border-color: #1d3557; }
+  .c1 .step-card::before { background: #4a9eff; }
+  .c1 .step-title { color: #4a9eff; }
+  .c1 .step-duration { background: #1d3557; color: #4a9eff; }
+  .c1 .tag-item { background: #1d3557; color: #7bbfff; }
+
+  .c2 .step-dot { background: #2d3a1a; border-color: #7bc67e; color: #7bc67e; }
+  .c2 .step-card { background: #111a11; border-color: #2a4020; }
+  .c2 .step-card::before { background: #7bc67e; }
+  .c2 .step-title { color: #7bc67e; }
+  .c2 .step-duration { background: #2a4020; color: #7bc67e; }
+  .c2 .tag-item { background: #2a4020; color: #9dd99f; }
+
+  .c3 .step-dot { background: #3a2a1a; border-color: #f5a623; color: #f5a623; }
+  .c3 .step-card { background: #1a1611; border-color: #3a2e18; }
+  .c3 .step-card::before { background: #f5a623; }
+  .c3 .step-title { color: #f5a623; }
+  .c3 .step-duration { background: #3a2e18; color: #f5a623; }
+  .c3 .tag-item { background: #3a2e18; color: #f7c46a; }
+
+  .c4 .step-dot { background: #3a1a2a; border-color: #e87c9e; color: #e87c9e; }
+  .c4 .step-card { background: #1a1118; border-color: #3a1d2d; }
+  .c4 .step-card::before { background: #e87c9e; }
+  .c4 .step-title { color: #e87c9e; }
+  .c4 .step-duration { background: #3a1d2d; color: #e87c9e; }
+  .c4 .tag-item { background: #3a1d2d; color: #f0a5bf; }
+
+  .c5 .step-dot { background: #1a2a3a; border-color: #7ec8e3; color: #7ec8e3; }
+  .c5 .step-card { background: #111618; border-color: #1d3040; }
+  .c5 .step-card::before { background: #7ec8e3; }
+  .c5 .step-title { color: #7ec8e3; }
+  .c5 .step-duration { background: #1d3040; color: #7ec8e3; }
+  .c5 .tag-item { background: #1d3040; color: #a4d9ed; }
+
+  .c6 .step-dot { background: #2a1a3a; border-color: #b07fd4; color: #b07fd4; }
+  .c6 .step-card { background: #141118; border-color: #2d1d40; }
+  .c6 .step-card::before { background: #b07fd4; }
+  .c6 .step-title { color: #b07fd4; }
+  .c6 .step-duration { background: #2d1d40; color: #b07fd4; }
+  .c6 .tag-item { background: #2d1d40; color: #cca3e4; }
+
+  .c7 .step-dot { background: #3a3a1a; border-color: #d4c46a; color: #d4c46a; }
+  .c7 .step-card { background: #181811; border-color: #3a381d; }
+  .c7 .step-card::before { background: #d4c46a; }
+  .c7 .step-title { color: #d4c46a; }
+  .c7 .step-duration { background: #3a381d; color: #d4c46a; }
+  .c7 .tag-item { background: #3a381d; color: #e5d88f; }
+
+  /* 分隔線：幹部會議前 */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 20px 80px;
+  }
+  .divider-line { flex: 1; height: 1px; background: #2a2d3a; border-style: dashed; border-width: 1px 0 0 0; border-color: #333; }
+  .divider-label { color: #555; font-size: 11px; letter-spacing: 1px; white-space: nowrap; }
+
+  /* 進度條視覺 */
+  .progress-row {
+    width: 100%;
+    max-width: 860px;
+    margin: 30px 0 10px 0;
+  }
+
+  .progress-label {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    display: flex;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 28px;
+  }
+
+  .pb-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #0f1117;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .footer {
+    margin-top: 40px;
+    color: #444;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">AGENDA 議程</div>
+  <h1>人車故事公益協會</h1>
+  <h2>🚗 例會標準議程</h2>
+  <div class="meta">每兩個月一次｜每年六場｜平日月底</div>
+</div>
+
+<!-- 總覽 -->
+<div class="total-bar">
+  <div>
+    <div class="label">總議程時間</div>
+    <div class="value">約 1.5 ~ 2 小時</div>
+  </div>
+  <div>
+    <div class="label">正式議程</div>
+    <div class="value">70 分鐘</div>
+  </div>
+  <div>
+    <div class="label">交流 + 幹部</div>
+    <div class="value">30+ 分鐘</div>
+  </div>
+  <div class="note">來賓最多參加<br><b style="color:#e8a020">一次</b>，當場決定入會</div>
+</div>
+
+<!-- 時間軸 -->
+<div class="timeline">
+
+  <!-- Step 1 -->
+  <div class="step c1">
+    <div class="step-time"><span>開場</span></div>
+    <div class="step-dot">1</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">🏛️</div>
+        <div class="step-title">協會現況報告</div>
+        <div class="step-duration">10 分鐘</div>
+      </div>
+      <div class="step-desc">主持人開場，報告協會目前狀態</div>
+      <div class="step-tags">
+        <span class="tag-item">📋 協會宗旨與目標</span>
+        <span class="tag-item">💰 經費現況</span>
+        <span class="tag-item">👥 會員人數</span>
+        <span class="tag-item">📅 本次 & 下次活動預告</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step c2">
+    <div class="step-time"><span>+10'</span></div>
+    <div class="step-dot">2</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">🎤</div>
+        <div class="step-title">主題簡報</div>
+        <div class="step-duration">20 分鐘</div>
+      </div>
+      <div class="step-desc">本次主講者分享（輪流主講，每位理事都有機會）</div>
+      <div class="step-tags">
+        <span class="tag-item">🏢 公司/品牌介紹（5 分）</span>
+        <span class="tag-item">💡 主題知識分享（15 分）</span>
+        <span class="tag-item">🤖 可分享：AI / 自媒體 / 技術 / 經營案例</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step c3">
+    <div class="step-time"><span>+30'</span></div>
+    <div class="step-dot">3</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">🤝</div>
+        <div class="step-title">自我介紹 & 交流時間</div>
+        <div class="step-duration">30 分鐘</div>
+      </div>
+      <div class="step-desc">全場自由交流，主動認識新朋友、找合作對象、約拍片</div>
+      <div class="step-tags">
+        <span class="tag-item">🎯 自由交流，無固定格式</span>
+        <span class="tag-item">📸 可互相拍片</span>
+        <span class="tag-item">⏱️ 人多時間長，人少則短</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step c4">
+    <div class="step-time"><span>+60'</span></div>
+    <div class="step-dot">4</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">✍️</div>
+        <div class="step-title">入會說明 & 現場收割</div>
+        <div class="step-duration">10 分鐘</div>
+      </div>
+      <div class="step-desc">介紹入會方案，現場掃碼直接付款入會</div>
+      <div class="step-tags">
+        <span class="tag-item">💳 一般會員：$8,800/年</span>
+        <span class="tag-item">📱 現場掃碼付款（串永豐帳戶）</span>
+        <span class="tag-item">📄 說明會員權利與義務</span>
+        <span class="tag-item">🎁 贊助捐款另案說明</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step c5">
+    <div class="step-time"><span>+70'</span></div>
+    <div class="step-dot">5</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">🏪</div>
+        <div class="step-title">場地參訪</div>
+        <div class="step-duration">15 分鐘</div>
+      </div>
+      <div class="step-desc">導覽本次舉辦場地（輪流在各會員店面辦），帶自媒體來幫忙拍片</div>
+      <div class="step-tags">
+        <span class="tag-item">🎬 自由拍片時間</span>
+        <span class="tag-item">🔄 場地每次輪換（增加誘因）</span>
+        <span class="tag-item">🚗 包膜 / 洗車 / 鍍膜場都歡迎</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分隔 -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-label">↓ 正式議程結束 · 以下自由進行</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step c6">
+    <div class="step-time"><span>+85'</span></div>
+    <div class="step-dot">6</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">💬</div>
+        <div class="step-title">自由交流時間</div>
+        <div class="step-duration">30+ 分鐘</div>
+      </div>
+      <div class="step-desc">自由離開或繼續交流，隨機採訪感想（可入社群影片素材）</div>
+      <div class="step-tags">
+        <span class="tag-item">🎥 隨機採訪感想（可剪入影片）</span>
+        <span class="tag-item">🤳 自由拍片分享</span>
+        <span class="tag-item">🚪 可自由離場</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 7 -->
+  <div class="step c7">
+    <div class="step-time"><span>最後</span></div>
+    <div class="step-dot">7</div>
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-icon">⚙️</div>
+        <div class="step-title">幹部會議（核心成員）</div>
+        <div class="step-duration">不限時</div>
+      </div>
+      <div class="step-desc">一般來賓/會員散場後，核心理事留下討論</div>
+      <div class="step-tags">
+        <span class="tag-item">🔍 上次活動檢討</span>
+        <span class="tag-item">📅 下次活動規劃</span>
+        <span class="tag-item">📊 財務與人力評估</span>
+        <span class="tag-item">🗳️ 重要事項表決</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 時間進度條 -->
+<div class="progress-row">
+  <div class="progress-label">議程時間分配（共 85 分鐘正式議程）</div>
+  <div class="progress-bar">
+    <div class="pb-seg" style="width:11.8%; background:#4a9eff;">報告<br>10'</div>
+    <div class="pb-seg" style="width:23.5%; background:#7bc67e;">簡報<br>20'</div>
+    <div class="pb-seg" style="width:35.3%; background:#f5a623;">交流<br>30'</div>
+    <div class="pb-seg" style="width:11.8%; background:#e87c9e;">收割<br>10'</div>
+    <div class="pb-seg" style="width:17.6%; background:#7ec8e3;">參訪<br>15'</div>
+  </div>
+</div>
+
+<!-- 底部說明 -->
+<div style="width:100%;max-width:860px;margin-top:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+  <div style="background:#1a1d27;border:1px solid #2a2d3a;border-radius:12px;padding:16px 18px;">
+    <div style="color:#e8a020;font-size:13px;font-weight:700;margin-bottom:8px;">📍 場地規則</div>
+    <div style="color:#aaa;font-size:12px;line-height:1.8;">
+      • 輪流在會員店面辦<br>
+      • 需有室內空間 + 投影設備<br>
+      • 場地提供者當次不需繳活動費
+    </div>
+  </div>
+  <div style="background:#1a1d27;border:1px solid #2a2d3a;border-radius:12px;padding:16px 18px;">
+    <div style="color:#e8a020;font-size:13px;font-weight:700;margin-bottom:8px;">👤 來賓規定</div>
+    <div style="color:#aaa;font-size:12px;line-height:1.8;">
+      • 最多參加 <b style="color:#e8a020">一次</b><br>
+      • 第一次來當場決定入會<br>
+      • 不入會則無法再參加
+    </div>
+  </div>
+  <div style="background:#1a1d27;border:1px solid #2a2d3a;border-radius:12px;padding:16px 18px;">
+    <div style="color:#e8a020;font-size:13px;font-weight:700;margin-bottom:8px;">🎬 影片規則</div>
+    <div style="color:#aaa;font-size:12px;line-height:1.8;">
+      • 正式議程 <b style="color:#e8a020">不對外拍攝</b><br>
+      • 參訪 / 交流可自由拍<br>
+      • 採訪感想可剪入社群
+    </div>
+  </div>
+</div>
+
+<!-- 年度時間表 -->
+<div style="width:100%;max-width:860px;margin-top:24px;background:#1a1d27;border:1px solid #2a2d3a;border-radius:12px;padding:20px 24px;">
+  <div style="color:#e8a020;font-size:14px;font-weight:700;margin-bottom:16px;">📅 2026 年度例會時間表</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:120px;background:#111420;border:1px solid #2a3060;border-radius:10px;padding:14px;text-align:center;">
+      <div style="color:#4a9eff;font-size:20px;font-weight:900;">6/30</div>
+      <div style="color:#888;font-size:11px;margin-top:4px;">第 1 場</div>
+      <div style="color:#fff;font-size:12px;margin-top:6px;font-weight:500;">K-Wax<br>Kevin 場地</div>
+      <div style="display:inline-block;background:#1a2a50;color:#7bbfff;font-size:10px;padding:2px 8px;border-radius:10px;margin-top:6px;">即將舉辦</div>
+    </div>
+    <div style="flex:1;min-width:120px;background:#111420;border:1px solid #1d3557;border-radius:10px;padding:14px;text-align:center;">
+      <div style="color:#7bc67e;font-size:20px;font-weight:900;">9/1</div>
+      <div style="color:#888;font-size:11px;margin-top:4px;">第 2 場</div>
+      <div style="color:#fff;font-size:12px;margin-top:6px;font-weight:500;">Superior<br>卓越中和店</div>
+    </div>
+    <div style="flex:1;min-width:120px;background:#111420;border:1px solid #1d3557;border-radius:10px;padding:14px;text-align:center;">
+      <div style="color:#f5a623;font-size:20px;font-weight:900;">10/27</div>
+      <div style="color:#888;font-size:11px;margin-top:4px;">第 3 場</div>
+      <div style="color:#fff;font-size:12px;margin-top:6px;font-weight:500;">派威場地</div>
+    </div>
+    <div style="flex:1;min-width:120px;background:#111420;border:1px solid #1d3557;border-radius:10px;padding:14px;text-align:center;">
+      <div style="color:#e87c9e;font-size:20px;font-weight:900;">12/29</div>
+      <div style="color:#888;font-size:11px;margin-top:4px;">第 4 場</div>
+      <div style="color:#fff;font-size:12px;margin-top:6px;font-weight:500;">絕世名膜<br>小劉場地</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">ECHO AI · 人車故事公益協會 · 2026</div>
+
+</body>
+</html>
