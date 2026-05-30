@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1080">
-<title>人車故事公益協會 — 會員權益 DM</title>
+<title>社團法人台灣人車公益協會 — 會員權益 DM</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
 
@@ -236,6 +236,69 @@
     font-size: 10px;
     color: #aaa;
     font-weight: 400;
+  }
+
+
+  .tax-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(80,200,120,0.1);
+    border: 1px solid rgba(80,200,120,0.35);
+    border-radius: 6px;
+    padding: 3px 9px;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #6dcc8a;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* 會費使用範圍 */
+  .usage-section {
+    background: #13151f;
+    border-radius: 16px;
+    padding: 32px 36px;
+    border: 1px solid #252830;
+    margin-bottom: 55px;
+    position: relative;
+    overflow: hidden;
+  }
+  .usage-section::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: linear-gradient(90deg, #6dcc8a, transparent);
+  }
+  .usage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .usage-card {
+    background: #0f1117;
+    border-radius: 10px;
+    padding: 18px 20px;
+    border: 1px solid #1e2030;
+    border-left: 3px solid #e8a020;
+  }
+  .usage-card h5 {
+    font-size: 13px; font-weight: 700; color: #e8a020;
+    margin-bottom: 10px;
+  }
+  .usage-card ul { list-style: none; padding: 0; }
+  .usage-card ul li {
+    font-size: 12px; color: #aaa; padding: 4px 0;
+    line-height: 1.6; border-bottom: 1px solid #1e2030;
+  }
+  .usage-card ul li:last-child { border-bottom: none; }
+  .usage-card ul li::before { content: '› '; color: #e8a020; font-weight: 700; }
+  .usage-note {
+    margin-top: 18px; padding: 12px 16px;
+    background: rgba(109,204,138,0.06);
+    border: 1px solid rgba(109,204,138,0.2);
+    border-radius: 8px; font-size: 12px; color: #6dcc8a;
   }
 
   .plan-desc {
@@ -497,7 +560,7 @@
         <img src="人車故事公益聯盟 LOGO 頭貼.png" alt="LOGO">
       </div>
       <div class="hero-sub">OLD CAR × NEW LIFE</div>
-      <h1>人車故事<span>公益協會</span><br>會員權益說明</h1>
+      <h1 style="font-size:30px;">社團法人<span>台灣人車公益協會</span><br><span style="color:#fff;font-size:26px;font-weight:700;">會員權益說明</span></h1>
       <div class="hero-tags">
         <span class="hero-tag">以人為本</span>
         <span class="hero-tag">以車為橋</span>
@@ -536,7 +599,7 @@
           <div class="plan-desc" style="margin-top:10px;">車圈業者、自媒體創作者<br>認同公益理念的夥伴</div>
         </div>
         <div class="plan-benefits">
-          <div class="benefit-item"><div class="benefit-dot"></div>一年四場例會參與資格</div>
+          <div class="benefit-item"><div class="benefit-dot"></div>一年六場例會參與資格</div>
           <div class="benefit-item"><div class="benefit-dot"></div>場地輪流參訪 + 拍片機會</div>
           <div class="benefit-item"><div class="benefit-dot"></div>協會公益活動優先參加</div>
           <div class="benefit-item"><div class="benefit-dot"></div>同業交流媒合人脈平台</div>
@@ -571,6 +634,7 @@
           <div class="plan-name">核心理事</div>
           <div class="plan-price" style="color:#c8a0f0;">$20,000<small>/ 年</small></div>
           <div class="plan-initiation" style="background:rgba(180,120,240,0.1);border-color:rgba(180,120,240,0.3);color:#c8a0f0;">名額 6 席 · 無額外入會費</div>
+          <div class="tax-badge">✅ 年費均可抵稅</div>
           <div class="plan-desc" style="margin-top:10px;">協會核心決策成員<br>主導協會方向與活動規劃</div>
         </div>
         <div class="plan-benefits">
@@ -590,6 +654,7 @@
           <div class="plan-name">贊助捐款</div>
           <div class="plan-price" style="font-size:26px;">$30,000<small>+</small></div>
           <div class="plan-initiation" style="background:rgba(100,100,100,0.1);border-color:rgba(100,100,100,0.3);color:#888;">純捐款 · 非會員資格</div>
+          <div class="tax-badge">✅ 捐款可申請抵稅</div>
           <div class="plan-desc" style="margin-top:10px;">公益精神支持<br>協助協會持續運作行善</div>
         </div>
         <div class="plan-benefits">
@@ -616,7 +681,7 @@
         <div class="right-icon">📅</div>
         <div class="right-content">
           <h4>定期例會參與權</h4>
-          <p>每兩個月一場正式例會，一年共四場。有協會宗旨報告、主題分享、同業交流，讓你每次都有收穫。</p>
+          <p>每兩個月一場正式例會，一年共六場。有協會宗旨報告、主題分享、同業交流，讓你每次都有收穫。</p>
         </div>
       </div>
 
@@ -728,13 +793,62 @@
       </div>
     </div>
 
+
+    <!-- 會費使用範圍 -->
+    <div class="section-title">
+      <span class="section-tag">FEE USAGE</span>
+      <span class="section-name">會費使用範圍說明</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="usage-section">
+      <p style="color:#aaa;font-size:13px;line-height:1.8;">
+        依社團法人台灣人車公益協會章程，所有會費（含入會費、年費）及捐款，<strong style="color:#6dcc8a;">均依法可申請稅務抵免</strong>。費用將專款專用於下列公益項目：
+      </p>
+      <div class="usage-grid">
+        <div class="usage-card">
+          <h5>🚿 公益活動開支</h5>
+          <ul>
+            <li>公益洗車活動物資採購</li>
+            <li>淨灘活動設備與耗材</li>
+            <li>活動場地租借費用</li>
+            <li>志工餐飲及後勤費用</li>
+            <li>其他公益活動相關開支</li>
+          </ul>
+        </div>
+        <div class="usage-card">
+          <h5>🔧 老車翻新專案</h5>
+          <ul>
+            <li>老車修復零件與材料費</li>
+            <li>車輛整備與維修工資</li>
+            <li>翻新過程紀錄拍攝費用</li>
+            <li>個案評估與勘查開支</li>
+            <li>專案後續追蹤與記錄</li>
+          </ul>
+        </div>
+        <div class="usage-card">
+          <h5>📋 例會與行政開支</h5>
+          <ul>
+            <li>例會場地租借費用</li>
+            <li>例會餐飲與茶水費用</li>
+            <li>簡報與影音設備租用</li>
+            <li>協會行政及文書費用</li>
+            <li>官網維護與平台費用</li>
+          </ul>
+        </div>
+      </div>
+      <div class="usage-note">
+        ✅ &nbsp;所有收支均建立完整帳目，定期於例會向會員公開報告。捐款收據由協會統一開立，可用於個人及企業所得稅申報抵免。
+      </div>
+    </div>
+
     <!-- CTA -->
     <div class="cta">
       <div class="cta-left">
         <h3>立即加入，成為車圈公益的一份子</h3>
         <p>
           掃碼線上入會 · 現場繳費均可<br>
-          入會即享當年度所有例會參與資格<br>
+          入會即享當年度所有例會參與資格 · 所有費用均可抵稅<br>
           <span style="color:#e8a020;font-weight:600;">一般會員：入會費 $2,000 + 年費 $8,800</span><br>
 
           <span style="color:#7bbfff;font-weight:600;">團體會員：入會費 $5,000 + 年費 $28,800</span>
@@ -742,7 +856,7 @@
       </div>
       <div class="cta-links">
         <div class="cta-link">🌐 oldcarnewlif.wixsite.com/home</div>
-        <div class="cta-link">📘 FB：人車故事公益協會</div>
+        <div class="cta-link">📘 FB：社團法人台灣人車公益協會</div>
         <div class="cta-link">📷 IG：@oldcar.newlife</div>
         <div class="cta-link" style="color:#aaa;font-size:11px;margin-top:6px;">以人為本 · 以車為橋</div>
       </div>
@@ -752,7 +866,7 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    人車故事公益協會  ·  OLD CAR × NEW LIFE  ·  2026<br>
+    社團法人台灣人車公益協會  ·  OLD CAR × NEW LIFE  ·  2026<br>
     本 DM 內容依最新會議決議製作，詳情請洽協會窗口
   </div>
 
